@@ -19,6 +19,17 @@ class SimpleTest {
 	}
 
 	@Test
+	void ipTest() {
+		String ipString = "192.168.200.102";
+		long ip = Config.getInstance().ipToLong(ipString);
+
+		System.out.println(ip);
+
+		ipString = Config.getInstance().longToIp(ip);
+		System.out.println(ipString);
+	}
+
+	@Test
 	void locationBitTest() {
 		Location location = Location.builder()
 				.x(5)

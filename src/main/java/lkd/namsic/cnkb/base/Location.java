@@ -13,19 +13,19 @@ public class Location {
     public static Location toLocation(int hexLocation) {
         short ander = 0xff;
         return Location.builder()
-                .x(hexLocation & ander)
-                .y(hexLocation >> 8 & ander)
-                .fieldX(hexLocation >> 16 & ander)
-                .fieldY(hexLocation >> 24 & ander)
+                .x(hexLocation >> 24 & ander)
+                .y(hexLocation >> 16 & ander)
+                .fieldX(hexLocation >> 24 & ander)
+                .fieldY(hexLocation & ander)
                 .build();
     }
 
     public static int fromLocation(@NonNull Location location) {
         int hexLocation = 0x00000000;
-        hexLocation |= location.x;
-        hexLocation |= location.y << 8;
-        hexLocation |= location.fieldX << 16;
-        hexLocation |= location.fieldY << 24;
+        hexLocation |= location.x << 24;
+        hexLocation |= location.y << 16;
+        hexLocation |= location.fieldX << 8;
+        hexLocation |= location.fieldY;
 
         return hexLocation;
     }

@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Login {
+public class SignIn {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +25,9 @@ public class Login {
 
     @Column(columnDefinition = "INT UNSIGNED NOT NULL")
     Long ip;
+
+    @Column(nullable = false, length = 31)
+    String provider;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

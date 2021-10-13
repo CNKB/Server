@@ -23,4 +23,21 @@ public class UserRolePk implements Serializable {
     @JoinColumn(name = "role_id")
     Role role;
 
+    @Override
+    public int hashCode() {
+        return user.id.hashCode() ^ role.id.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj) return true;
+
+        if (obj instanceof UserRolePk pk) {
+            return user.id.equals(pk.user.id) &&
+                    role.id.equals(pk.role.id);
+        } else {
+            return false;
+        }
+    }
+
 }

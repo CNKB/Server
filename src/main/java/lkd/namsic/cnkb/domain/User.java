@@ -23,6 +23,9 @@ public class User {
     @Column
     Long id;
 
+    @Column(nullable = false, length = 320)
+    String email;
+
     @CreationTimestamp
     @Column(nullable = false)
     LocalDateTime created;
@@ -41,17 +44,19 @@ public class User {
     @Column
     String image;
 
+    @Column
+    String token;
+
+    @Column(columnDefinition = "INT UNSIGNED NOT NULL")
+    Long lastIp;
+
     @Builder.Default
     @OneToMany(mappedBy = "pk.user", cascade = CascadeType.ALL)
     List<UserRole> userRoleList = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    List<OAuth> oAuthList = new ArrayList<>();
-
-    @Builder.Default
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    List<Login> loginList = new ArrayList<>();
+    List<SignIn> signInList = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
