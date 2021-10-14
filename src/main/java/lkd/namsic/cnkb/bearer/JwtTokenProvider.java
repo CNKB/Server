@@ -5,9 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
-import java.util.Base64;
-import java.util.Date;
-import java.util.Objects;
+import java.util.*;
 
 @Component
 public record JwtTokenProvider(String secretKey, long validityInMilliseconds) {
@@ -18,9 +16,10 @@ public record JwtTokenProvider(String secretKey, long validityInMilliseconds) {
         this.validityInMilliseconds = validityInMilliseconds;
     }
 
-    public String createToken(@NonNull String subject) {
-        Claims claims = Objects.requireNonNull(Jwts.claims())
-                .setSubject(subject);
+    public String createToken(@NonNull String email, @NonNull List<String> roles) {
+        Map<String, Object> claims = new LinkedHashMap<>();
+        claims.put("email", email);
+        claims.put("roles", roles);
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
@@ -33,15 +32,13 @@ public record JwtTokenProvider(String secretKey, long validityInMilliseconds) {
                 .compact();
     }
 
-    public String getSubject(String token) {
+    public Map<String, Object> getSubject(String token) {
         return Jwts.parser()
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+                .getBody();
     }
 
-    //유효한 토큰인지 확인
     public boolean validateToken(String token) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);

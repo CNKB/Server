@@ -8,10 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 @Slf4j
 public class Config {
+
+    //TODO: swagger
 
     private static final Config instance = new Config();
 
@@ -21,7 +25,22 @@ public class Config {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends Response> T safeCall(String methodName, Callable<T> callable) {
+    public void checkRole(@NonNull HttpServletRequest request, String...requiredRoles) {
+        List<String> roleSet = (List<String>) request.getAttribute("roles");
+
+        if(roleSet == null) {
+            throw new CommonException(403, "Forbidden resource");
+        }
+
+        for(String requiredRole : requiredRoles) {
+            if(!roleSet.contains(requiredRole)) {
+                throw new CommonException(401, "Unauthorized");
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends Response> T safeCall(@NonNull String methodName, @NonNull Callable<T> callable) {
         try {
             return callable.call();
         } catch (CommonException e) {

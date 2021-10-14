@@ -47,7 +47,7 @@ public class User {
     @Column
     String token;
 
-    @Column(columnDefinition = "INT UNSIGNED NOT NULL")
+    @Column(columnDefinition = "BIGINT UNSIGNED NOT NULL")
     Long lastIp;
 
     @Builder.Default

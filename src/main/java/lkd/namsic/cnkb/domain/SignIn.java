@@ -23,7 +23,7 @@ public class SignIn {
     @Column(nullable = false)
     LocalDateTime created;
 
-    @Column(columnDefinition = "INT UNSIGNED NOT NULL")
+    @Column(columnDefinition = "BIGINT UNSIGNED NOT NULL")
     Long ip;
 
     @Column(nullable = false, length = 31)

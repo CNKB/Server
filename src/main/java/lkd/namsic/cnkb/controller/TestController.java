@@ -1,6 +1,7 @@
 package lkd.namsic.cnkb.controller;
 
 import lkd.namsic.cnkb.Config;
+import lkd.namsic.cnkb.dto.response.Response;
 import lkd.namsic.cnkb.dto.response.TestResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,16 @@ public class TestController {
                 .build(),
                 HttpStatus.OK
         );
+    }
+
+    @GetMapping("/t")
+    public ResponseEntity<Response> tokenRoleTest(HttpServletRequest request) {
+        Response response = Config.getInstance().safeCall("tokenRoleTest", () -> {
+            Config.getInstance().checkRole(request, "user");
+            return Response.builder().build();
+        });
+
+        return Config.getInstance().getResponseEntity(response);
     }
 
 }

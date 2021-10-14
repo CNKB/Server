@@ -1,6 +1,8 @@
 package lkd.namsic.cnkb;
 
+import lkd.namsic.cnkb.domain.Role;
 import lkd.namsic.cnkb.domain.TestDomain;
+import lkd.namsic.cnkb.repository.RoleRepository;
 import lkd.namsic.cnkb.repository.TestRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,8 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @WebAppConfiguration
 @SpringBootTest
 @Transactional(propagation = Propagation.NEVER, isolation = Isolation.READ_COMMITTED)
@@ -19,6 +23,9 @@ public class TransactionTest {
 
     @Autowired
     TestRepository testRepository;
+
+    @Autowired
+    RoleRepository roleRepository;
 
     @Test
     public void dbTest() {
@@ -82,6 +89,16 @@ public class TransactionTest {
             if(i % 100 == 0) {
                 System.out.println(i);
             }
+        }
+    }
+
+    @Test
+    public void initDb() {
+        long roleCount = roleRepository.count();
+
+        if(roleCount == 0) {
+            roleRepository.save(Role.builder().name("user").build());
+            roleRepository.save(Role.builder().name("admin").build());
         }
     }
 
