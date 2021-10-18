@@ -1,6 +1,7 @@
 package lkd.namsic.cnkb.controller;
 
 import lkd.namsic.cnkb.Config;
+import lkd.namsic.cnkb.domain.User;
 import lkd.namsic.cnkb.dto.SignInInput;
 import lkd.namsic.cnkb.dto.response.Response;
 import lkd.namsic.cnkb.service.UserService;
@@ -24,6 +25,13 @@ public class UserController {
                                            @RequestBody SignInInput input) {
         Response response = userService.signIn(request, input);
         log.info("signIn - {}", input.toString());
+        return Config.getInstance().getResponseEntity(response);
+    }
+
+    @GetMapping("/players/t")
+    public ResponseEntity<Response> getPlayers(HttpServletRequest request) {
+        Response response = userService.getPlayers(request);
+        log.info("getPlayers - {}", request.getAttribute("id"));
         return Config.getInstance().getResponseEntity(response);
     }
 

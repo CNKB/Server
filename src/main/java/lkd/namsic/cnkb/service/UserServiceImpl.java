@@ -3,18 +3,17 @@ package lkd.namsic.cnkb.service;
 import lkd.namsic.cnkb.Config;
 import lkd.namsic.cnkb.bearer.JwtTokenProvider;
 import lkd.namsic.cnkb.domain.*;
+import lkd.namsic.cnkb.domain.game.player.Player;
 import lkd.namsic.cnkb.dto.SignInInput;
 import lkd.namsic.cnkb.dto.response.Response;
 import lkd.namsic.cnkb.exception.CommonException;
-import lkd.namsic.cnkb.repository.RoleRepository;
-import lkd.namsic.cnkb.repository.UserRoleRepository;
-import lkd.namsic.cnkb.repository.SignInRepository;
-import lkd.namsic.cnkb.repository.UserRepository;
+import lkd.namsic.cnkb.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +34,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     SignInRepository signInRepository;
+
+    @Autowired
+    PlayerRepository playerRepository;
 
     @Autowired
     JwtTokenProvider jwtTokenProvider;
@@ -86,13 +88,38 @@ public class UserServiceImpl implements UserService {
                     .stream()
                     .map(userRole -> userRole.getPk().getRole().getName())
                     .collect(Collectors.toList());
-            String token = jwtTokenProvider.createToken(email, roleSet);
+            String token = jwtTokenProvider.createToken(user.getId(), roleSet);
 
             user.setToken(token);
             userRepository.save(user);
 
-            Map<String, String> data = new HashMap<>();
-            data.put("token", token);
+            return Response.builder().data(token).build();
+        });
+    }
+
+    @Override
+    public Response getPlayers(HttpServletRequest request) {
+        return Config.getInstance().safeCall("getPlayers", () -> {
+            long userId = Long.parseLong((String) request.getAttribute("id"));
+            List<Player> playerList = playerRepository.findAllByUserId(userId);
+
+            List<Map<String, Object>> data = new ArrayList<>();
+
+            Map<String, Object> innerData;
+            for(int i = 0; i < 5; i++) {
+                innerData = new HashMap<>();
+
+                try {
+                    Player player = playerList.get(i);
+
+                    innerData.put("lv", player.getLv());
+                    innerData.put("name", player.getName());
+                    innerData.put("title", player.getTitle());
+                    innerData.put("lastPlayed", Config.getInstance().formatter.format(player.getUpdated()));
+                } catch (IndexOutOfBoundsException ignore) {}
+
+                data.add(innerData);
+            }
 
             return Response.builder().data(data).build();
         });

@@ -8,14 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Set;
+import java.util.Locale;
 import java.util.concurrent.Callable;
 
 @Slf4j
 public class Config {
-
-    //TODO: swagger
 
     private static final Config instance = new Config();
 
@@ -23,6 +22,8 @@ public class Config {
     public static Config getInstance() {
         return instance;
     }
+
+    public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss", Locale.KOREA);
 
     @SuppressWarnings("unchecked")
     public void checkRole(@NonNull HttpServletRequest request, String...requiredRoles) {
@@ -100,8 +101,9 @@ public class Config {
         return ipString;
     }
 
-    public <T extends Response> ResponseEntity<T> getResponseEntity(T response) {
-        return new ResponseEntity<T>(response, HttpStatus.valueOf(response.getStatus()));
+    @NonNull
+    public <T extends Response> ResponseEntity<T> getResponseEntity(@NonNull T response) {
+        return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatus()));
     }
 
 }

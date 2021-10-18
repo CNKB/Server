@@ -16,9 +16,9 @@ public record JwtTokenProvider(String secretKey, long validityInMilliseconds) {
         this.validityInMilliseconds = validityInMilliseconds;
     }
 
-    public String createToken(@NonNull String email, @NonNull List<String> roles) {
+    public String createToken(long id, @NonNull List<String> roles) {
         Map<String, Object> claims = new LinkedHashMap<>();
-        claims.put("email", email);
+        claims.put("id", id);
         claims.put("roles", roles);
 
         Date now = new Date();

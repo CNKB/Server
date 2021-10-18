@@ -26,9 +26,10 @@ public class WebConfig implements WebMvcConfigurer {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("*")
+                        .allowedOriginPatterns("*")
                         .allowedMethods("*")
-                        .allowCredentials(false);
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
             }
         };
     }
@@ -38,8 +39,7 @@ public class WebConfig implements WebMvcConfigurer {
         log.info("Registering interceptors");
 
         registry.addInterceptor(bearerAuthInterceptor)
-                .addPathPatterns("/test/t")
-                .addPathPatterns("/t");
+                .addPathPatterns("/**/t");
     }
 
 }

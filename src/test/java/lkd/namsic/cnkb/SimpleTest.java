@@ -3,6 +3,8 @@ package lkd.namsic.cnkb;
 import lkd.namsic.cnkb.base.Location;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+
 @SuppressWarnings("ConstantConditions")
 class SimpleTest {
 
@@ -47,6 +49,12 @@ class SimpleTest {
 		location = Location.toLocation(hexLocation);
 		System.out.println("Location: " + location.getX() + "." + location.getY() +
 				"." + location.getFieldX() + "." + location.getFieldY());
+	}
+
+	@Test
+	void dateTimeStringTest() {
+		LocalDateTime dateTime = LocalDateTime.now();
+		System.out.println(Config.getInstance().formatter.format(dateTime));
 	}
 
 }

@@ -1,5 +1,6 @@
 package lkd.namsic.cnkb.bearer;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -22,6 +23,10 @@ public class BearerAuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
                              Object handler) throws Exception {
+        if(request.getMethod().equals(HttpMethod.OPTIONS.name())) {
+            return true;
+        }
+
         String token = authExtractor.extract(request, "Bearer");
 
         if (!(token != null && token.trim().length() > 0 && jwtTokenProvider.validateToken(token))) {
@@ -30,7 +35,7 @@ public class BearerAuthInterceptor implements HandlerInterceptor {
         }
 
         Map<String, Object> claims = jwtTokenProvider.getSubject(token);
-        request.setAttribute("email", claims.get("email"));
+        request.setAttribute("id", claims.get("id").toString());
         request.setAttribute("roles", claims.get("roles"));
 
         return true;
