@@ -2,27 +2,20 @@ package lkd.namsic.cnkb.bearer;
 
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 
 @Component
-public record JwtTokenProvider(String secretKey, long validityInMilliseconds) {
+public record JwtTokenProvider(String secretKey) {
 
-    public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") String secretKey,
-                            @Value("${security.jwt.token.expire-length}") long validityInMilliseconds) {
+    public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") String secretKey) {
         this.secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
-        this.validityInMilliseconds = validityInMilliseconds;
     }
 
-    public String createToken(long id, @NonNull List<String> roles) {
-        Map<String, Object> claims = new LinkedHashMap<>();
-        claims.put("id", id);
-        claims.put("roles", roles);
-
+    public String createToken(Map<String, Object> claims, long millis) {
         Date now = new Date();
-        Date validity = new Date(now.getTime() + validityInMilliseconds);
+        Date validity = new Date(now.getTime() + millis);
 
         return Jwts.builder()
                 .setClaims(claims)

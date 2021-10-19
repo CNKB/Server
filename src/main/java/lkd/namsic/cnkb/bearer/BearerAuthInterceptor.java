@@ -35,7 +35,7 @@ public class BearerAuthInterceptor implements HandlerInterceptor {
         }
 
         Map<String, Object> claims = jwtTokenProvider.getSubject(token);
-        request.setAttribute("id", claims.get("id").toString());
+        request.setAttribute("id", claims.get("id"));
         request.setAttribute("roles", claims.get("roles"));
 
         return true;

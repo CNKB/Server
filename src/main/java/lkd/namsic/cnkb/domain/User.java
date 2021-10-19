@@ -44,9 +44,6 @@ public class User {
     @Column
     String image;
 
-    @Column
-    String token;
-
     @Column(columnDefinition = "BIGINT UNSIGNED NOT NULL")
     Long lastIp;
 
