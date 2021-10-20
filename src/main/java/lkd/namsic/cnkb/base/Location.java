@@ -5,8 +5,6 @@ import org.springframework.lang.Nullable;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class Location {
 

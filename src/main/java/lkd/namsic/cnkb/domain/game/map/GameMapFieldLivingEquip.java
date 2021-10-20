@@ -8,8 +8,6 @@ import javax.persistence.Entity;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class GameMapFieldLivingEquip {
 

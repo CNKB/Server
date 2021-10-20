@@ -35,5 +35,4 @@ build/
 *Tests.java
 .gradle/
 .idea/
-build/
 gradle/

@@ -13,8 +13,6 @@ import java.util.List;
 @javax.persistence.Entity
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class CreatedEntity {
 
@@ -77,5 +75,9 @@ public class CreatedEntity {
     @Builder.Default
     @OneToMany(mappedBy = "createdEntity", cascade = CascadeType.ALL)
     List<LivingVariable> livingVariableList = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "createdEntity", cascade = CascadeType.ALL)
+    List<CreatedEntityTag> createdEntityTagList = new ArrayList<>();
 
 }

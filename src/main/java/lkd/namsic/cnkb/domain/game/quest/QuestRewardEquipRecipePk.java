@@ -11,8 +11,6 @@ import java.io.Serializable;
 @Embeddable
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class QuestRewardEquipRecipePk implements Serializable {
 

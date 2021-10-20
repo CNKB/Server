@@ -1,14 +1,15 @@
-package lkd.namsic.cnkb.domain.game.player;
+package lkd.namsic.cnkb.domain.game.entity;
 
 import lombok.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
 
 @Entity
 @Getter
 @Setter
 @Builder
-public class PlayerTitle {
+public class CreatedEntityTag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,10 +17,10 @@ public class PlayerTitle {
     Long id;
 
     @Column(nullable = false, length = 63)
-    String title;
+    String tag;
 
     @ManyToOne
-    @JoinColumn(name = "player_id", nullable = false)
-    Player player;
+    @JoinColumn(name = "created_entity_id", nullable = false)
+    CreatedEntity createdEntity;
 
 }

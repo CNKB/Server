@@ -18,8 +18,8 @@ import java.util.Map;
 @Component
 public class SocketHandler extends TextWebSocketHandler {
 
-    public static Map<String, Long> sessionIdMap = new LinkedHashMap<>();
-    public static Map<Long, WebSocketSession> sessionMap = new LinkedHashMap<>();
+    public static final Map<String, Long> sessionIdMap = new LinkedHashMap<>();
+    public static final Map<Long, WebSocketSession> sessionMap = new LinkedHashMap<>();
 
     @Autowired
     private ObjectMapper objectMapper;
