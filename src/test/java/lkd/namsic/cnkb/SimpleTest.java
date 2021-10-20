@@ -54,7 +54,7 @@ class SimpleTest {
 	@Test
 	void dateTimeStringTest() {
 		LocalDateTime dateTime = LocalDateTime.now();
-		System.out.println(Config.getInstance().formatter.format(dateTime));
+		System.out.println(Config.getInstance().timeFormatter.format(dateTime));
 	}
 
 }

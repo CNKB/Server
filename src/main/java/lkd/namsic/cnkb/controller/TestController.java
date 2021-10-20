@@ -28,7 +28,7 @@ public class TestController {
     public ResponseEntity<Response> tokenRoleTest(HttpServletRequest request) {
         Response response = Config.getInstance().safeCall("tokenRoleTest", () -> {
             Config.getInstance().checkRole(request, "user");
-            return Response.builder().data("Ok").build();
+            return Response.builder().data("Success").build();
         });
 
         return Config.getInstance().getResponseEntity(response);

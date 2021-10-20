@@ -36,7 +36,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        log.info("Registering interceptors");
+        log.info("Registering bearer interceptor");
 
         registry.addInterceptor(bearerAuthInterceptor)
                 .addPathPatterns("/**/t");

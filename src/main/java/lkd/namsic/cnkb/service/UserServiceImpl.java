@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService {
                     innerData.put("lv", player.getLv());
                     innerData.put("name", player.getName());
                     innerData.put("title", player.getTitle());
-                    innerData.put("lastPlayed", Config.getInstance().formatter.format(player.getUpdated()));
+                    innerData.put("lastPlayed", Config.getInstance().dateFormatter.format(player.getUpdated()));
                 } catch (IndexOutOfBoundsException ignore) {}
 
                 data.add(innerData);
