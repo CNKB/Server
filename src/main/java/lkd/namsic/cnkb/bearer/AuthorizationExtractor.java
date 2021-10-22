@@ -9,10 +9,8 @@ import java.util.Enumeration;
 @Component
 public class AuthorizationExtractor {
 
-    public static final String AUTHORIZATION = "Authorization";
-
     public String extract(HttpServletRequest request, String type) {
-        Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
+        Enumeration<String> headers = request.getHeaders("Authorization");
 
         while (headers.hasMoreElements()) {
             String value = headers.nextElement();

@@ -11,6 +11,8 @@ import java.util.List;
 @javax.persistence.Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class Entity {
 

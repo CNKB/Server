@@ -5,6 +5,8 @@ import lkd.namsic.cnkb.service.socket.SocketConnectService;
 import lkd.namsic.cnkb.service.socket.SocketDisconnectService;
 import lkd.namsic.cnkb.socket.SocketData;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
@@ -14,9 +16,13 @@ import java.util.Map;
 
 @Slf4j
 @Service
+@Primary
 public class SocketServiceImpl implements SocketService {
 
-    private final Map<String, SocketService> serviceMap = new LinkedHashMap<>();
+    @Autowired
+    SocketTokenService socketTokenService;
+
+    public static final Map<String, SocketService> serviceMap = new LinkedHashMap<>();
 
     public SocketServiceImpl() {
         serviceMap.put("connect", new SocketConnectService());
@@ -40,7 +46,11 @@ public class SocketServiceImpl implements SocketService {
                 throw new CommonException(400, "Unknown request - " + request);
             }
 
-            return service.handleData(input, session);
+            if(service instanceof SocketTokenService tokenService) {
+                return socketTokenService.handleData(input, session, tokenService);
+            } else {
+                return service.handleData(input, session);
+            }
         } catch (CommonException e) {
             return SocketData.Output
                     .builder()

@@ -29,7 +29,7 @@ public class BearerAuthInterceptor implements HandlerInterceptor {
 
         String token = authExtractor.extract(request, "Bearer");
 
-        if (!(token != null && token.trim().length() > 0 && jwtTokenProvider.validateToken(token))) {
+        if (!(token != null && token.trim().length() > 0 && jwtTokenProvider.validateToken(token) != 0)) {
             response.sendError(401, "Unauthorized");
             return false;
         }

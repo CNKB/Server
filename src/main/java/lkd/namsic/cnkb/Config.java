@@ -23,8 +23,13 @@ public class Config {
         return instance;
     }
 
+    @NonNull
     public final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd", Locale.KOREA);
+
+    @NonNull
     public final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss", Locale.KOREA);
+
+    public final String VERSION = "Beta 1.0.0";
 
     @SuppressWarnings("unchecked")
     public void checkRole(@NonNull HttpServletRequest request, String...requiredRoles) {

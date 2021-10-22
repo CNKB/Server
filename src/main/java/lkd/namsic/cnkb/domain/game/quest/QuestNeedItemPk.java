@@ -11,6 +11,8 @@ import java.io.Serializable;
 @Embeddable
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class QuestNeedItemPk implements Serializable {
 

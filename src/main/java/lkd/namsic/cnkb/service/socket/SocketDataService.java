@@ -1,26 +1,18 @@
 package lkd.namsic.cnkb.service.socket;
 
-import lkd.namsic.cnkb.Config;
-import lkd.namsic.cnkb.service.SocketService;
+import lkd.namsic.cnkb.service.SocketTokenService;
 import lkd.namsic.cnkb.socket.SocketData;
-import lkd.namsic.cnkb.socket.SocketHandler;
 import org.springframework.lang.NonNull;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class SocketConnectService implements SocketService {
+public class SocketDataService implements SocketTokenService {
 
     @Override
     public SocketData.Output handleData(@NonNull SocketData.Input input, @NonNull WebSocketSession session) {
-        long playerId = input.getPlayerId();
-
-        SocketHandler.sessionIdMap.put(session.getId(), playerId);
-        SocketHandler.sessionMap.put(playerId, session);
-
         Map<String, Object> data = new HashMap<>();
-        data.put("version", Config.getInstance().VERSION);
 
         return SocketData.Output
                 .builder()
