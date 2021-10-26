@@ -3,6 +3,7 @@ package lkd.namsic.cnkb.controller;
 import lkd.namsic.cnkb.Config;
 import lkd.namsic.cnkb.dto.response.Response;
 import lkd.namsic.cnkb.dto.response.TestResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,10 +16,13 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/test")
 public class TestController {
 
+    @Autowired
+    Config config;
+
     @GetMapping("/client-ip")
     public ResponseEntity<TestResponse> getClientIp(HttpServletRequest request) {
         return new ResponseEntity<>(TestResponse.builder()
-                .data(Config.getInstance().getIp(request))
+                .data(config.getIp(request))
                 .build(),
                 HttpStatus.OK
         );
@@ -26,12 +30,12 @@ public class TestController {
 
     @GetMapping("/t")
     public ResponseEntity<Response> tokenRoleTest(HttpServletRequest request) {
-        Response response = Config.getInstance().safeCall("tokenRoleTest", () -> {
-            Config.getInstance().checkRole(request, "user");
+        Response response = config.safeCall("tokenRoleTest", () -> {
+            config.checkRole(request, "user");
             return Response.builder().data("Success").build();
         });
 
-        return Config.getInstance().getResponseEntity(response);
+        return config.getResponseEntity(response);
     }
 
 }

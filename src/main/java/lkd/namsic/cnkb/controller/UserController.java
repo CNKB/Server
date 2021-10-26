@@ -18,6 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 public class UserController {
 
     @Autowired
+    Config config;
+
+    @Autowired
     UserService userService;
 
     @PostMapping("/sign-in")
@@ -25,7 +28,7 @@ public class UserController {
                                            @RequestBody UserInput.SignInInput input) {
         Response response = userService.signIn(request, input);
         log.info("signIn - {} {}", response.getStatus(), input.toString());
-        return Config.getInstance().getResponseEntity(response);
+        return config.getResponseEntity(response);
     }
 
     @GetMapping("/players/t")
@@ -33,14 +36,14 @@ public class UserController {
                                                @RequestBody(required = false) User user) {
         Response response = userService.getPlayers(request, user);
         log.info("getPlayers - {} {}", response.getStatus(), request.getAttribute("id"));
-        return Config.getInstance().getResponseEntity(response);
+        return config.getResponseEntity(response);
     }
 
     @GetMapping("/token")
     public ResponseEntity<Response> getToken(@RequestHeader(value = "refreshToken") String refreshToken) {
         Response response = userService.getToken(refreshToken);
         log.info("getToken - {} {}", response.getStatus(), refreshToken);
-        return Config.getInstance().getResponseEntity(response);
+        return config.getResponseEntity(response);
     }
 
 }

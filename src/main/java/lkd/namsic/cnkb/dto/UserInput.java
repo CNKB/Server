@@ -10,6 +10,7 @@ public class UserInput {
     public static class SignInInput {
         String email;
         String provider;
+        String uid;
     }
 
 }

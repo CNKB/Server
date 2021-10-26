@@ -13,4 +13,6 @@ public class Response {
 
     Object data;
 
+    String message;
+
 }

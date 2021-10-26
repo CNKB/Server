@@ -1,5 +1,10 @@
 package lkd.namsic.cnkb.service;
 
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 import lkd.namsic.cnkb.Config;
 import lkd.namsic.cnkb.bearer.JwtTokenProvider;
 import lkd.namsic.cnkb.domain.*;
@@ -13,11 +18,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.*;
 
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService {
+
+    @Autowired
+    Config config;
 
     @Autowired
     UserRepository userRepository;
@@ -37,39 +47,61 @@ public class UserServiceImpl implements UserService {
     @Autowired
     JwtTokenProvider jwtTokenProvider;
 
+    public UserServiceImpl() throws IOException {
+        FirebaseOptions options = Objects.requireNonNull(
+                        FirebaseOptions.builder()
+                                .setCredentials(GoogleCredentials.fromStream(
+                                        new FileInputStream(System.getenv("firebase"))
+                                ))
+                )
+                .build();
+        FirebaseApp.initializeApp(options);
+    }
+
     @Override
     public Response signIn(HttpServletRequest request, UserInput.SignInInput input) {
-        return Config.getInstance().safeCall("signIn", () -> {
+        return config.safeCall("signIn", () -> {
             String email = input.getEmail();
             String provider = input.getProvider();
+            String uid = input.getUid();
 
             if(email == null) {
                 throw new CommonException(412, "Requires email");
             } else if(provider == null) {
                 throw new CommonException(412, "Requires provider");
+            } else if(uid == null || uid.isEmpty()) {
+                throw new CommonException(412, "Requires uid");
             }
 
-            String ipString = Config.getInstance().getIp(request);
-            long ip = Config.getInstance().ipToLong(ipString);
+            try {
+                FirebaseAuth.getInstance().getUser(uid);
+            } catch (FirebaseAuthException e) {
+                throw new CommonException(400, "Unknown uid");
+            }
+
+            String ipString = config.getIp(request);
+            long ip = config.ipToLong(ipString);
 
             User user = userRepository.findByEmail(email).orElseGet(() -> {
-                User savedUser = User.builder()
-                        .email(email)
-                        .lastIp(ip)
-                        .build();
-
                 Role role = roleRepository.findByName("user").orElseThrow(
                         () -> new RuntimeException("Database has not been initialized")
                 );
 
-                savedUser = userRepository.save(savedUser);
+                User savedUser = userRepository.save(
+                        User.builder()
+                                .email(email)
+                                .lastIp(ip)
+                                .build()
+                );
 
-                userRoleRepository.save(UserRole.builder()
-                        .pk(UserRolePk.builder()
-                                .user(savedUser)
-                                .role(role)
-                                .build())
-                        .build());
+                userRoleRepository.save(
+                        UserRole.builder()
+                                .pk(UserRolePk.builder()
+                                        .user(savedUser)
+                                        .role(role)
+                                        .build())
+                                .build()
+                );
 
                 return savedUser;
             });
@@ -88,7 +120,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Response getPlayers(HttpServletRequest request, User user) {
-        return Config.getInstance().safeCall("getPlayers", () -> {
+        return config.safeCall("getPlayers", () -> {
             Long userId;
 
             if(user == null || (userId = user.getId()) == null) {
@@ -105,10 +137,11 @@ public class UserServiceImpl implements UserService {
                 try {
                     Player player = playerList.get(i);
 
+                    innerData.put("id", player.getId());
                     innerData.put("lv", player.getLv());
                     innerData.put("name", player.getName());
                     innerData.put("title", player.getTitle());
-                    innerData.put("lastPlayed", Config.getInstance().dateFormatter.format(player.getUpdated()));
+                    innerData.put("lastPlayed", config.dateFormatter.format(player.getUpdated()));
                 } catch (IndexOutOfBoundsException ignore) {}
 
                 data.add(innerData);
@@ -118,9 +151,10 @@ public class UserServiceImpl implements UserService {
         });
     }
 
+
     @Override
     public Response getToken(String tokenInput) {
-        return Config.getInstance().safeCall("getPlayers", () -> {
+        return config.safeCall("getPlayers", () -> {
             long userId = jwtTokenProvider.validateToken(tokenInput);
             if(userId == 0) {
                 throw new CommonException(401, "Unauthorized");

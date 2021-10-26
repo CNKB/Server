@@ -6,22 +6,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 
 @Slf4j
+@Component
 public class Config {
-
-    private static final Config instance = new Config();
-
-    @NonNull
-    public static Config getInstance() {
-        return instance;
-    }
 
     @NonNull
     public final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd", Locale.KOREA);
@@ -30,6 +28,22 @@ public class Config {
     public final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss", Locale.KOREA);
 
     public final String VERSION = "Beta 1.0.0";
+    public final int MAX_PLAYER_COUNT = 5;
+    public final String REGEX = "[^A-Za-z-_0-9ㄱ-ㅣ가-힣~!@#$%^&*=+/,. ]";
+    public final List<String> INVALID_WORD_LIST;
+
+    public Config() throws Exception {
+        INVALID_WORD_LIST = new ArrayList<>();
+
+        BufferedReader reader = new BufferedReader(new FileReader(System.getenv("invalid")));
+
+        String line;
+        while((line = reader.readLine()) != null) {
+            INVALID_WORD_LIST.add(line);
+        }
+
+        reader.close();
+    }
 
     @SuppressWarnings("unchecked")
     public void checkRole(@NonNull HttpServletRequest request, String...requiredRoles) {
@@ -53,14 +67,14 @@ public class Config {
         } catch (CommonException e) {
             return (T) T.builder()
                     .status(e.getStatus())
-                    .data(e.getMessage())
+                    .message(e.getMessage())
                     .build();
         } catch (Exception e) {
             log.error(methodName, e);
 
             return (T) T.builder()
                     .status(500)
-                    .data("Unknown Error")
+                    .message("Unknown Error")
                     .build();
         }
     }
