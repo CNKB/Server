@@ -1,12 +1,14 @@
 package lkd.namsic.cnkb.service;
 
 import lkd.namsic.cnkb.Config;
+import lkd.namsic.cnkb.domain.User;
 import lkd.namsic.cnkb.domain.game.player.Player;
 import lkd.namsic.cnkb.domain.game.player.PlayerTitle;
 import lkd.namsic.cnkb.dto.response.Response;
 import lkd.namsic.cnkb.exception.CommonException;
 import lkd.namsic.cnkb.repository.PlayerRepository;
 import lkd.namsic.cnkb.repository.PlayerTitleRepository;
+import lkd.namsic.cnkb.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,9 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Autowired
     Config config;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     PlayerRepository playerRepository;
@@ -37,17 +42,17 @@ public class PlayerServiceImpl implements PlayerService {
             }
 
             if(name.length() < 2 || name.length() > 16) {
-                throw new CommonException(406, "Invalid name length - 2,16");
+                throw new CommonException(406, "Invalid length - 2,16");
             }
 
-            String replacedName = name.replace(name, config.REGEX);
+            String replacedName = name.replace(config.REGEX, "");
             if(!name.equals(replacedName)) {
-                throw new CommonException(406, "Invalid regex name - " + replacedName);
+                throw new CommonException(406, "Invalid regex - " + replacedName);
             }
 
             for(String invalidWord : config.INVALID_WORD_LIST) {
                 if(name.contains(invalidWord)) {
-                    throw new CommonException(406, "Contains invalid word - " + invalidWord);
+                    throw new CommonException(406, "Invalid word - " + invalidWord);
                 }
             }
 
@@ -59,12 +64,19 @@ public class PlayerServiceImpl implements PlayerService {
                         "Player count reached max(" + config.MAX_PLAYER_COUNT + ")");
             }
 
-            Player createdPlayer = Player.builder().name(name).build();
+            User user = userRepository.findById(userId).orElseThrow(
+                    () -> new CommonException(409, "Unknown user")
+            );
+
+            Player createdPlayer = Player.builder()
+                    .user(user)
+                    .name(name)
+                    .build();
             createdPlayer = playerRepository.save(createdPlayer);
 
             playerTitleRepository.save(
                     PlayerTitle.builder()
-                            .player(player)
+                            .player(createdPlayer)
                             .title("초심자")
                             .build()
             );

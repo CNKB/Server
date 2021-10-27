@@ -19,9 +19,9 @@ public class SocketTokenServiceImpl implements SocketTokenService {
     JwtTokenProvider jwtTokenProvider;
 
     private void checkToken(@NonNull String accessToken) throws CommonException {
-        long playerId = jwtTokenProvider.validateToken(accessToken);
+        long userId = jwtTokenProvider.validateToken(accessToken);
 
-        if(playerId == 0) {
+        if(userId == 0) {
             throw new CommonException(401, "Unauthorized");
         }
     }

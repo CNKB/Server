@@ -2,6 +2,7 @@ package lkd.namsic.cnkb.bearer;
 
 import io.jsonwebtoken.*;
 import lkd.namsic.cnkb.domain.User;
+import lkd.namsic.cnkb.repository.UserRepository;
 import lkd.namsic.cnkb.repository.UserRoleRepository;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenProvider {
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     UserRoleRepository userRoleRepository;
@@ -41,7 +45,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public Map<String, Object> getSubject(String token) {
+    public Claims getSubject(String token) {
         return Jwts.parser()
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)
@@ -49,20 +53,33 @@ public class JwtTokenProvider {
     }
 
     public long validateToken(String token) {
-        long playerId;
+        long userId;
 
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-            if (claims.getBody().getExpiration().before(new Date())) {
+            Claims subject = getSubject(token);
+
+            Date expiration = subject.getExpiration();
+            Date date = new Date();
+
+            if (expiration.before(date)) {
                 return 0;
             }
 
-            playerId = Long.parseLong((String) claims.getBody().get("id"));
+            userId = Long.parseLong((String) subject.get("id"));
+
+            date.setTime(date.getTime() + (accessTokenMillis / 2));
+            if(expiration.before(date)) {
+                User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+                Map<String, String> tokenData = getTokenData(user);
+
+                subject.put("accessToken", tokenData.get("accessToken"));
+                subject.put("refreshToken", tokenData.get("refreshToken"));
+            }
         } catch (JwtException | IllegalArgumentException e) {
             return 0;
         }
 
-        return playerId;
+        return userId;
     }
 
     @NonNull
