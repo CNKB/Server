@@ -1,4 +1,4 @@
-package lkd.namsic.cnkb;
+package lkd.namsic.cnkb.config;
 
 import lkd.namsic.cnkb.dto.response.Response;
 import lkd.namsic.cnkb.exception.CommonException;

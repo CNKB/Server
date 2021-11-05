@@ -1,6 +1,7 @@
 package lkd.namsic.cnkb.base;
 
 import lombok.*;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 @Getter
@@ -10,22 +11,23 @@ import org.springframework.lang.Nullable;
 @Builder
 public class Location {
 
-    public static Location toLocation(int hexLocation) {
+    @NonNull
+    public static Location toLocation(int hex) {
         short ander = 0xff;
         return Location.builder()
-                .x(hexLocation >> 24 & ander)
-                .y(hexLocation >> 16 & ander)
-                .fieldX(hexLocation >> 24 & ander)
-                .fieldY(hexLocation & ander)
+                .x(hex >> 24)
+                .y(hex >> 16 & ander)
+                .fieldX(hex >> 24 & ander)
+                .fieldY(hex & ander)
                 .build();
     }
 
-    public static int fromLocation(@NonNull Location location) {
+    public int toHex() {
         int hexLocation = 0x00000000;
-        hexLocation |= location.x << 24;
-        hexLocation |= location.y << 16;
-        hexLocation |= location.fieldX << 8;
-        hexLocation |= location.fieldY;
+        hexLocation |= this.x << 24;
+        hexLocation |= this.y << 16;
+        hexLocation |= this.fieldX << 8;
+        hexLocation |= this.fieldY;
 
         return hexLocation;
     }
@@ -37,7 +39,7 @@ public class Location {
 
     @Override
     public int hashCode() {
-        return (x ^ y) ^ (fieldX ^ fieldY);
+        return ((x ^ y) << 16) | ((fieldX ^ fieldY) >> 16);
     }
 
     public boolean equalsField(@Nullable Object obj) {
@@ -62,7 +64,23 @@ public class Location {
 
     @Override
     public boolean equals(Object obj) {
-        return equalsField(obj) && equalsMap(obj);
+        return this.equalsField(obj) && this.equalsMap(obj);
+    }
+
+    @NonNull
+    public String toMapString() {
+        return x + "-" + y;
+    }
+
+    @NonNull
+    public String toFieldString() {
+        return "(" + fieldX + "-" + fieldY + ")";
+    }
+
+    @Override
+    @NonNull
+    public String toString() {
+        return this.toMapString() + " - " + this.toFieldString();
     }
 
 }

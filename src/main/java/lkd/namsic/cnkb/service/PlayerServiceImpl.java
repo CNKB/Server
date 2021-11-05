@@ -1,6 +1,6 @@
 package lkd.namsic.cnkb.service;
 
-import lkd.namsic.cnkb.Config;
+import lkd.namsic.cnkb.config.Config;
 import lkd.namsic.cnkb.domain.User;
 import lkd.namsic.cnkb.domain.game.player.Player;
 import lkd.namsic.cnkb.domain.game.player.PlayerTitle;
@@ -21,16 +21,16 @@ import java.util.List;
 public class PlayerServiceImpl implements PlayerService {
 
     @Autowired
-    Config config;
+    private Config config;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    PlayerRepository playerRepository;
+    private PlayerRepository playerRepository;
 
     @Autowired
-    PlayerTitleRepository playerTitleRepository;
+    private PlayerTitleRepository playerTitleRepository;
 
     @Override
     public Response createPlayer(HttpServletRequest request, Player player) {

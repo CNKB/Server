@@ -1,6 +1,6 @@
 package lkd.namsic.cnkb.service;
 
-import lkd.namsic.cnkb.socket.SocketData;
+import lkd.namsic.cnkb.dto.SocketData;
 import org.springframework.lang.NonNull;
 import org.springframework.web.socket.WebSocketSession;
 

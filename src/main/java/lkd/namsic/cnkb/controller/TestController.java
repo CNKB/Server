@@ -1,6 +1,6 @@
 package lkd.namsic.cnkb.controller;
 
-import lkd.namsic.cnkb.Config;
+import lkd.namsic.cnkb.config.Config;
 import lkd.namsic.cnkb.dto.response.Response;
 import lkd.namsic.cnkb.dto.response.TestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 public class TestController {
 
     @Autowired
-    Config config;
+    private Config config;
 
     @GetMapping("/client-ip")
     public ResponseEntity<TestResponse> getClientIp(HttpServletRequest request) {

@@ -1,6 +1,6 @@
 package lkd.namsic.cnkb.controller;
 
-import lkd.namsic.cnkb.Config;
+import lkd.namsic.cnkb.config.Config;
 import lkd.namsic.cnkb.domain.User;
 import lkd.namsic.cnkb.dto.UserInput;
 import lkd.namsic.cnkb.dto.response.Response;
@@ -18,10 +18,10 @@ import javax.servlet.http.HttpServletRequest;
 public class UserController {
 
     @Autowired
-    Config config;
+    private Config config;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @PostMapping("/sign-in")
     public ResponseEntity<Response> signIn(HttpServletRequest request,

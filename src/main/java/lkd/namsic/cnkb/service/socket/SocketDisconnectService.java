@@ -1,11 +1,13 @@
 package lkd.namsic.cnkb.service.socket;
 
 import lkd.namsic.cnkb.service.SocketService;
-import lkd.namsic.cnkb.socket.SocketData;
-import lkd.namsic.cnkb.socket.SocketHandler;
+import lkd.namsic.cnkb.dto.SocketData;
+import lkd.namsic.cnkb.controller.SocketHandler;
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
+@Component
 public class SocketDisconnectService implements SocketService {
 
     @Override

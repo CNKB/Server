@@ -1,5 +1,6 @@
 package lkd.namsic.cnkb.domain.game.entity;
 
+import lkd.namsic.cnkb.domain.game.map.GameMap;
 import lkd.namsic.cnkb.enums.Doing;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -49,6 +50,10 @@ public class CreatedEntity {
     @ManyToOne
     @JoinColumn(name = "entity_id", nullable = false)
     Entity entity;
+
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    GameMap gameMap;
 
     @Builder.Default
     @OneToMany(mappedBy = "pk.createdEntity", cascade = CascadeType.ALL)

@@ -1,6 +1,6 @@
 package lkd.namsic.cnkb.controller;
 
-import lkd.namsic.cnkb.Config;
+import lkd.namsic.cnkb.config.Config;
 import lkd.namsic.cnkb.domain.game.player.Player;
 import lkd.namsic.cnkb.dto.response.Response;
 import lkd.namsic.cnkb.service.PlayerService;
@@ -20,10 +20,10 @@ import javax.servlet.http.HttpServletRequest;
 public class PlayerController {
 
     @Autowired
-    Config config;
+    private Config config;
 
     @Autowired
-    PlayerService playerService;
+    private PlayerService playerService;
 
     @PostMapping("/create-player/t")
     public ResponseEntity<Response> createPlayer(HttpServletRequest request,

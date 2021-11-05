@@ -1,4 +1,4 @@
-package lkd.namsic.cnkb;
+package lkd.namsic.cnkb.config;
 
 public record GameConfig() {
 

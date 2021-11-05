@@ -1,10 +1,11 @@
 package lkd.namsic.cnkb.service;
 
+import lkd.namsic.cnkb.bearer.JwtTokenProvider;
 import lkd.namsic.cnkb.exception.CommonException;
 import lkd.namsic.cnkb.service.socket.SocketConnectService;
 import lkd.namsic.cnkb.service.socket.SocketDataService;
 import lkd.namsic.cnkb.service.socket.SocketDisconnectService;
-import lkd.namsic.cnkb.socket.SocketData;
+import lkd.namsic.cnkb.dto.SocketData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -12,6 +13,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
+import javax.annotation.PostConstruct;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -21,47 +23,56 @@ import java.util.Map;
 public class SocketServiceImpl implements SocketService {
 
     @Autowired
-    SocketTokenService socketTokenService;
+    private JwtTokenProvider jwtTokenProvider;
 
-    public static final Map<String, SocketService> serviceMap = new LinkedHashMap<>();
+    private void checkToken(@NonNull String accessToken) throws CommonException {
+        long userId = jwtTokenProvider.validateToken(accessToken);
 
-    //TODO: Change non-token api to token api
+        if(userId == 0) {
+            throw new CommonException(401, "Unauthorized");
+        }
+    }
 
-    public SocketServiceImpl() {
-        serviceMap.put("connect", new SocketConnectService());
-        serviceMap.put("disconnect", new SocketDisconnectService());
-        serviceMap.put("data", new SocketDataService());
+    public static Map<String, SocketService> serviceMap;
+
+    @Autowired private SocketConnectService socketConnectService;
+    @Autowired private SocketDisconnectService socketDisconnectService;
+    @Autowired private SocketDataService socketDataService;
+
+    @PostConstruct
+    public void init() {
+        serviceMap = new LinkedHashMap<>() {{
+            put("connect", socketConnectService);
+            put("disconnect", socketDisconnectService);
+            put("data", socketDataService);
+        }};
     }
 
     @Override
     public SocketData.Output handleData(@NonNull SocketData.Input input, @NonNull WebSocketSession session) {
         String request = input.getRequest();
         Long playerId = input.getPlayerId();
+        String accessToken = input.getAccessToken();
 
         try {
             if(request == null) {
                 throw new CommonException(412, "Requires request");
             } else if(playerId == null) {
                 throw new CommonException(412, "Requires playerId");
+            } else if(accessToken == null) {
+                throw new CommonException(412, "Requires accessToken");
             }
+
+            checkToken(accessToken);
 
             SocketService service = serviceMap.get(request);
             if(service == null) {
                 throw new CommonException(400, "Unknown request - " + request);
             }
 
-            SocketData.Output output;
-            if(service instanceof SocketTokenService tokenService) {
-                output = socketTokenService.handleData(input, session, tokenService);
-            } else {
-                output = service.handleData(input, session);
-            }
-
-            log.info("Socket - {} {} {}", request, playerId, output.getStatus());
-
-            return output;
+            return service.handleData(input, session);
         } catch (CommonException e) {
-            log.info("Socket Common Error - {} {} {}", request, playerId, e.getStatus());
+            log.info("Common Exception - {} {}", e.getMessage(), playerId);
 
             return SocketData.Output
                     .builder()

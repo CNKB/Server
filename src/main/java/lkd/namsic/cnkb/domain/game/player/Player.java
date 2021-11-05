@@ -1,14 +1,15 @@
 package lkd.namsic.cnkb.domain.game.player;
 
-import lkd.namsic.cnkb.domain.game.entity.*;
-import lkd.namsic.cnkb.enums.Doing;
 import lkd.namsic.cnkb.domain.User;
+import lkd.namsic.cnkb.domain.game.entity.*;
+import lkd.namsic.cnkb.domain.game.map.GameMap;
+import lkd.namsic.cnkb.enums.Doing;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
 import javax.persistence.Entity;
+import javax.persistence.*;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -57,14 +58,6 @@ public class Player {
     @Builder.Default
     @Column(columnDefinition = "TINYINT UNSIGNED NOT NULL")
     Integer doing = Doing.NONE.value;
-
-    @Builder.Default
-    @Column(nullable = false)
-    Integer location = 0x01010101;
-
-    @Builder.Default
-    @Column(nullable = false)
-    Integer baseLocation = 0x01010101;
     
     @Builder.Default
     @Column(columnDefinition = "TINYINT UNSIGNED NOT NULL")
@@ -85,6 +78,14 @@ public class Player {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     User user;
+
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    GameMap gameMap;
+
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    GameMap baseGameMap;
 
     @Builder.Default
     @OneToMany(mappedBy = "pk.player", cascade = CascadeType.ALL)

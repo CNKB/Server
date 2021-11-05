@@ -16,10 +16,10 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    UserRoleRepository userRoleRepository;
+    private UserRoleRepository userRoleRepository;
 
     @Value("${security.jwt.token.secret-key}")
     String secretKey;

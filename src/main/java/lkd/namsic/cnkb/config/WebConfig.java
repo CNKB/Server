@@ -1,4 +1,4 @@
-package lkd.namsic.cnkb;
+package lkd.namsic.cnkb.config;
 
 import lkd.namsic.cnkb.bearer.BearerAuthInterceptor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@SuppressWarnings({"unused", "ClassCanBeRecord"})
+@SuppressWarnings({"ClassCanBeRecord"})
 @Slf4j
 @Configuration
 public class WebConfig implements WebMvcConfigurer {

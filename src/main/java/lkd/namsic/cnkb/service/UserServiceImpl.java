@@ -5,7 +5,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
-import lkd.namsic.cnkb.Config;
+import lkd.namsic.cnkb.config.Config;
 import lkd.namsic.cnkb.bearer.JwtTokenProvider;
 import lkd.namsic.cnkb.domain.*;
 import lkd.namsic.cnkb.domain.game.player.Player;
@@ -27,31 +27,31 @@ import java.util.*;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    Config config;
+    private Config config;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
     @Autowired
-    UserRoleRepository userRoleRepository;
+    private UserRoleRepository userRoleRepository;
 
     @Autowired
-    SignInRepository signInRepository;
+    private SignInRepository signInRepository;
 
     @Autowired
-    PlayerRepository playerRepository;
+    private PlayerRepository playerRepository;
 
     @Autowired
-    JwtTokenProvider jwtTokenProvider;
+    private JwtTokenProvider jwtTokenProvider;
 
     public UserServiceImpl() throws IOException {
         FirebaseOptions options = Objects.requireNonNull(
                         FirebaseOptions.builder()
                                 .setCredentials(GoogleCredentials.fromStream(
-                                        new FileInputStream(System.getenv("firebase"))
+                                        new FileInputStream(System.getenv("cnkb_firebase"))
                                 ))
                 )
                 .build();
