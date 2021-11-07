@@ -1,6 +1,6 @@
 package lkd.namsic.cnkb.config;
 
-import lkd.namsic.cnkb.dto.response.Response;
+import lkd.namsic.cnkb.dto.Response;
 import lkd.namsic.cnkb.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

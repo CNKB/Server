@@ -1,7 +1,8 @@
 package lkd.namsic.cnkb.service.socket;
 
-import lkd.namsic.cnkb.service.SocketService;
-import lkd.namsic.cnkb.dto.SocketData;
+import lkd.namsic.cnkb.domain.game.player.Player;
+import lkd.namsic.cnkb.dto.socket.SocketInnerData;
+import lkd.namsic.cnkb.dto.socket.SocketOutput;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
@@ -13,10 +14,16 @@ import java.util.Map;
 public class SocketDataService implements SocketService {
 
     @Override
-    public SocketData.Output handleData(@NonNull SocketData.Input input, @NonNull WebSocketSession session) {
+    public SocketOutput handleData(@NonNull Player player, @NonNull WebSocketSession session) {
         Map<String, Object> data = new HashMap<>();
 
-        return SocketData.Output
+        data.put("category",
+                new HashMap<String, Object>() {{
+                    put("upDown", new SocketInnerData.UpDownButton("game.up_down", 1, 1));//TODO
+                }}
+        );
+
+        return SocketOutput
                 .builder()
                 .message("Success")
                 .data(data)

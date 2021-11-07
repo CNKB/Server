@@ -1,18 +1,22 @@
-package lkd.namsic.cnkb.dto.response;
+package lkd.namsic.cnkb.dto.socket;
 
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
+import org.springframework.lang.Nullable;
 
-@Builder
+import java.util.Map;
+
 @Getter
-public class Response {
+@Builder
+public class SocketOutput {
 
     @Builder.Default
     Integer status = HttpStatus.OK.value();
 
-    Object data;
-
     String message;
+
+    @Nullable
+    Map<String, Object> data;
 
 }

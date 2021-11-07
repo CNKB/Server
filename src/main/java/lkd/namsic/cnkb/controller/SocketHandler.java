@@ -2,8 +2,8 @@ package lkd.namsic.cnkb.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lkd.namsic.cnkb.dto.SocketData;
-import lkd.namsic.cnkb.service.SocketService;
+import lkd.namsic.cnkb.dto.socket.SocketInput;
+import lkd.namsic.cnkb.dto.socket.SocketOutput;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
@@ -20,19 +20,19 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class SocketHandler extends TextWebSocketHandler {
 
-    public static final Map<String, Long> sessionIdMap = new ConcurrentHashMap<>();
+    public static final Map<String, Long> sessionMap = new ConcurrentHashMap<>();
 
     @Autowired
     private ObjectMapper objectMapper;
 
     @Autowired
-    private SocketService socketService;
+    private SocketDispatcher socketDispatcher;
 
     @Override
     public void afterConnectionClosed(@NonNull WebSocketSession session, CloseStatus status) throws Exception {
         String sessionId = session.getId();
 
-        Long playerId = sessionIdMap.remove(sessionId);
+        Long playerId = sessionMap.remove(sessionId);
         if(playerId != null) {
             log.info("Removed non-disconnected session - {}", playerId);
         }
@@ -43,13 +43,12 @@ public class SocketHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, @NonNull TextMessage message) throws Exception {
         String payload = message.getPayload();
-        SocketData.Input input;
+        SocketInput input;
 
         try {
-            input = objectMapper.readValue(payload, SocketData.Input.class);
+            input = objectMapper.readValue(payload, SocketInput.class);
         } catch (JsonProcessingException e) {
-            SocketData.Output output = SocketData.Output
-                    .builder()
+            SocketOutput output = SocketOutput.builder()
                     .status(400)
                     .message(e.getMessage())
                     .build();
@@ -61,10 +60,14 @@ public class SocketHandler extends TextWebSocketHandler {
             return;
         }
 
-        SocketData.Output output = socketService.handleData(input, session);
+        SocketOutput output = socketDispatcher.executeService(input, session);
 
         log.info("Session - {} {} {} {}", input.getPlayerId(), input.getRequest(), output.getStatus(), output.getMessage());
         session.sendMessage(new TextMessage(objectMapper.writeValueAsString(output)));
+
+        if(output.getStatus() == -1) {
+            session.close();
+        }
     }
 
 }

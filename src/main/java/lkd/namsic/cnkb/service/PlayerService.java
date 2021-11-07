@@ -1,7 +1,7 @@
 package lkd.namsic.cnkb.service;
 
 import lkd.namsic.cnkb.domain.game.player.Player;
-import lkd.namsic.cnkb.dto.response.Response;
+import lkd.namsic.cnkb.dto.Response;
 
 import javax.servlet.http.HttpServletRequest;
 

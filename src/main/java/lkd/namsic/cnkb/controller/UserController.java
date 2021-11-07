@@ -2,8 +2,8 @@ package lkd.namsic.cnkb.controller;
 
 import lkd.namsic.cnkb.config.Config;
 import lkd.namsic.cnkb.domain.User;
-import lkd.namsic.cnkb.dto.UserInput;
-import lkd.namsic.cnkb.dto.response.Response;
+import lkd.namsic.cnkb.dto.Response;
+import lkd.namsic.cnkb.dto.user.SignInInput;
 import lkd.namsic.cnkb.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class UserController {
 
     @PostMapping("/sign-in")
     public ResponseEntity<Response> signIn(HttpServletRequest request,
-                                           @RequestBody UserInput.SignInInput input) {
+                                           @RequestBody SignInInput input) {
         Response response = userService.signIn(request, input);
         log.info("signIn - {} {}", response.getStatus(), input.toString());
         return config.getResponseEntity(response);

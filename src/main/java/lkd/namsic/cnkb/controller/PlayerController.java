@@ -2,7 +2,7 @@ package lkd.namsic.cnkb.controller;
 
 import lkd.namsic.cnkb.config.Config;
 import lkd.namsic.cnkb.domain.game.player.Player;
-import lkd.namsic.cnkb.dto.response.Response;
+import lkd.namsic.cnkb.dto.Response;
 import lkd.namsic.cnkb.service.PlayerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

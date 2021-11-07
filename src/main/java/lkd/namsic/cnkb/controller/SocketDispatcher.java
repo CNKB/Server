@@ -1,26 +1,26 @@
-package lkd.namsic.cnkb.service;
+package lkd.namsic.cnkb.controller;
 
 import lkd.namsic.cnkb.bearer.JwtTokenProvider;
+import lkd.namsic.cnkb.domain.game.player.Player;
+import lkd.namsic.cnkb.dto.socket.SocketInput;
+import lkd.namsic.cnkb.dto.socket.SocketOutput;
 import lkd.namsic.cnkb.exception.CommonException;
-import lkd.namsic.cnkb.service.socket.SocketConnectService;
-import lkd.namsic.cnkb.service.socket.SocketDataService;
-import lkd.namsic.cnkb.service.socket.SocketDisconnectService;
-import lkd.namsic.cnkb.dto.SocketData;
+import lkd.namsic.cnkb.repository.PlayerRepository;
+import lkd.namsic.cnkb.service.socket.SocketService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
 import javax.annotation.PostConstruct;
-import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
-@Service
-@Primary
-public class SocketServiceImpl implements SocketService {
+@Component
+public class SocketDispatcher {
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
@@ -33,23 +33,25 @@ public class SocketServiceImpl implements SocketService {
         }
     }
 
-    public static Map<String, SocketService> serviceMap;
+    @Autowired
+    private PlayerRepository playerRepository;
 
-    @Autowired private SocketConnectService socketConnectService;
-    @Autowired private SocketDisconnectService socketDisconnectService;
-    @Autowired private SocketDataService socketDataService;
+    @Autowired
+    private List<SocketService> socketServiceList;
+
+    private static Map<String, SocketService> serviceMap;
 
     @PostConstruct
     public void init() {
-        serviceMap = new LinkedHashMap<>() {{
-            put("connect", socketConnectService);
-            put("disconnect", socketDisconnectService);
-            put("data", socketDataService);
-        }};
+        serviceMap = socketServiceList.stream()
+                .collect(Collectors.toMap(
+                        SocketService::getRequest,
+                        service -> service
+                ));
     }
 
-    @Override
-    public SocketData.Output handleData(@NonNull SocketData.Input input, @NonNull WebSocketSession session) {
+    public SocketOutput executeService(@NonNull SocketInput input,
+                                        @NonNull WebSocketSession session) {
         String request = input.getRequest();
         Long playerId = input.getPlayerId();
         String accessToken = input.getAccessToken();
@@ -70,11 +72,12 @@ public class SocketServiceImpl implements SocketService {
                 throw new CommonException(400, "Unknown request - " + request);
             }
 
-            return service.handleData(input, session);
+            Player player = playerRepository.findById(playerId).orElseThrow(RuntimeException::new);
+            return service.handleData(player, session);
         } catch (CommonException e) {
             log.info("Common Exception - {} {}", e.getMessage(), playerId);
 
-            return SocketData.Output
+            return SocketOutput
                     .builder()
                     .status(e.getStatus())
                     .message(e.getMessage())
@@ -82,7 +85,7 @@ public class SocketServiceImpl implements SocketService {
         } catch (Exception e) {
             e.printStackTrace();
 
-            return SocketData.Output
+            return SocketOutput
                     .builder()
                     .status(500)
                     .message(e.getMessage())

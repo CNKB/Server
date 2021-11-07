@@ -9,8 +9,8 @@ import lkd.namsic.cnkb.config.Config;
 import lkd.namsic.cnkb.bearer.JwtTokenProvider;
 import lkd.namsic.cnkb.domain.*;
 import lkd.namsic.cnkb.domain.game.player.Player;
-import lkd.namsic.cnkb.dto.UserInput;
-import lkd.namsic.cnkb.dto.response.Response;
+import lkd.namsic.cnkb.dto.Response;
+import lkd.namsic.cnkb.dto.user.SignInInput;
 import lkd.namsic.cnkb.exception.CommonException;
 import lkd.namsic.cnkb.repository.*;
 import lombok.extern.slf4j.Slf4j;
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Response signIn(HttpServletRequest request, UserInput.SignInInput input) {
+    public Response signIn(HttpServletRequest request, SignInInput input) {
         return config.safeCall("signIn", () -> {
             String email = input.getEmail();
             String provider = input.getProvider();

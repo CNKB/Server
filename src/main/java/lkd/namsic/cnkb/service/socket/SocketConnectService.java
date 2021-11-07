@@ -1,8 +1,8 @@
 package lkd.namsic.cnkb.service.socket;
 
 import lkd.namsic.cnkb.config.Config;
-import lkd.namsic.cnkb.service.SocketService;
-import lkd.namsic.cnkb.dto.SocketData;
+import lkd.namsic.cnkb.domain.game.player.Player;
+import lkd.namsic.cnkb.dto.socket.SocketOutput;
 import lkd.namsic.cnkb.controller.SocketHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
@@ -19,28 +19,26 @@ public class SocketConnectService implements SocketService {
     private Config config;
 
     @Override
-    public SocketData.Output handleData(@NonNull SocketData.Input input, @NonNull WebSocketSession session) {
-        long playerId = input.getPlayerId();
+    public SocketOutput handleData(@NonNull Player player, @NonNull WebSocketSession session) {
+        long playerId = player.getId();
+        String sessionId = session.getId();
+        Map<String, Object> data = new HashMap<>();
 
-        String message;
-        WebSocketSession currentSession = SocketHandler.sessionMap.remove(playerId);
-
-        if(currentSession != null) {
-            SocketHandler.sessionIdMap.remove(currentSession.getId());
-            message = "Session already exists";
-        } else {
-            message = "Success";
+        if(SocketHandler.sessionMap.remove(sessionId) != null) {
+            return SocketOutput
+                    .builder()
+                    .status(-1)
+                    .message("Multi connection with playerId - " + playerId)
+                    .data(data)
+                    .build();
         }
 
-        SocketHandler.sessionIdMap.put(session.getId(), playerId);
-        SocketHandler.sessionMap.put(playerId, session);
-
-        Map<String, Object> data = new HashMap<>();
+        SocketHandler.sessionMap.put(sessionId, playerId);
         data.put("version", config.VERSION);
 
-        return SocketData.Output
+        return SocketOutput
                 .builder()
-                .message(message)
+                .message("Success")
                 .data(data)
                 .build();
     }
