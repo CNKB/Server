@@ -1,7 +1,10 @@
 package lkd.namsic.cnkb.domain.game.npc;
 
 import lkd.namsic.cnkb.domain.game.quest.Quest;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
@@ -12,33 +15,32 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class NpcChatLimitCurrentQuestPk implements Serializable {
-
+    
     @ManyToOne
     @JoinColumn(name = "npc_chat_id")
     NpcChat npcChat;
-
+    
     @ManyToOne
     @JoinColumn(name = "quest_id")
     Quest quest;
-
+    
     @Override
     public int hashCode() {
         return npcChat.id.hashCode() ^ quest.getId().hashCode();
     }
-
+    
     @Override
     public boolean equals(Object obj) {
         if(this == obj) return true;
-
-        if (obj instanceof NpcChatLimitCurrentQuestPk pk) {
+        
+        if(obj instanceof NpcChatLimitCurrentQuestPk pk) {
             return npcChat.id.equals(pk.npcChat.id) &&
-                    quest.getId().equals(pk.quest.getId());
+                quest.getId().equals(pk.quest.getId());
         } else {
             return false;
         }
     }
-
+    
 }

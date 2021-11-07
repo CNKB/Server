@@ -13,33 +13,33 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Slf4j
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-
+    
     private final BearerAuthInterceptor bearerAuthInterceptor;
-
+    
     public WebConfig(@NonNull BearerAuthInterceptor bearerAuthInterceptor) {
         this.bearerAuthInterceptor = bearerAuthInterceptor;
     }
-
+    
     @Bean
     public WebMvcConfigurer webMvcConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOriginPatterns("*")
-                        .allowedMethods("*")
-                        .allowedHeaders("*")
-                        .allowCredentials(true);
+                    .allowedOriginPatterns("*")
+                    .allowedMethods("*")
+                    .allowedHeaders("*")
+                    .allowCredentials(true);
             }
         };
     }
-
+    
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         log.info("Registering bearer interceptor");
-
+        
         registry.addInterceptor(bearerAuthInterceptor)
-                .addPathPatterns("/**/t");
+            .addPathPatterns("/**/t");
     }
-
+    
 }

@@ -7,9 +7,11 @@ import lkd.namsic.cnkb.dto.user.SignInInput;
 import javax.servlet.http.HttpServletRequest;
 
 public interface UserService {
-
+    
     Response signIn(HttpServletRequest request, SignInInput input);
+    
     Response getPlayers(HttpServletRequest request, User user);
+    
     Response getToken(String tokenInput);
-
+    
 }

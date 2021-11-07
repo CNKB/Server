@@ -4,8 +4,8 @@ import lkd.namsic.cnkb.config.Config;
 import lkd.namsic.cnkb.domain.game.player.Player;
 import lkd.namsic.cnkb.dto.Response;
 import lkd.namsic.cnkb.service.PlayerService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,15 +16,13 @@ import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @RestController
+@AllArgsConstructor
 @RequestMapping("/player")
 public class PlayerController {
-
-    @Autowired
-    private Config config;
-
-    @Autowired
-    private PlayerService playerService;
-
+    
+    private final Config config;
+    private final PlayerService playerService;
+    
     @PostMapping("/create-player/t")
     public ResponseEntity<Response> createPlayer(HttpServletRequest request,
                                                  @RequestBody Player player) {
@@ -32,5 +30,5 @@ public class PlayerController {
         log.info("createPlayer - {} {}", response.getStatus(), request.getAttribute("id"));
         return config.getResponseEntity(response);
     }
-
+    
 }

@@ -3,7 +3,7 @@ package lkd.namsic.cnkb.enums;
 import org.springframework.lang.NonNull;
 
 public enum MapType implements NamedEnum {
-
+    
     CITY(1),
     FIELD(2),
     MOUNTAIN(3),
@@ -27,18 +27,18 @@ public enum MapType implements NamedEnum {
     HELL(21),
     HEAVEN(22),
     FAR_SIDE(23);
-
+    
     public static final EnumFinder<MapType> finder = EnumFinder.getFinder(MapType.values());
     public final int value;
-
+    
     MapType(int value) {
         this.value = value;
     }
-
+    
     @NonNull
     @Override
     public String getBase() {
         return "mapType";
     }
-
+    
 }

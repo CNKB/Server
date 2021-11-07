@@ -1,6 +1,9 @@
 package lkd.namsic.cnkb.domain.game.entity;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -11,14 +14,13 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class CreatedEntityAngry {
-
+    
     @EmbeddedId
     CreatedEntityAngryPk pk;
-
+    
     @Column(nullable = false)
     LocalDateTime angryTime;
-
+    
 }

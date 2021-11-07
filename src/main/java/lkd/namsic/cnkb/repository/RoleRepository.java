@@ -7,7 +7,7 @@ import org.springframework.lang.NonNull;
 import java.util.Optional;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
-
+    
     Optional<Role> findByName(@NonNull String name);
-
+    
 }

@@ -6,10 +6,10 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.socket.WebSocketSession;
 
 public interface SocketService {
-
+    
     @NonNull
     String getRequest();
-
+    
     SocketOutput handleData(@NonNull Player player, @NonNull WebSocketSession session);
-
+    
 }

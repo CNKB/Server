@@ -8,13 +8,13 @@ import lombok.ToString;
 @Setter
 @ToString
 public class CommonException extends RuntimeException {
-
+    
     int status;
     String message;
-
+    
     public CommonException(int status, String message) {
         this.status = status;
         this.message = message;
     }
-
+    
 }

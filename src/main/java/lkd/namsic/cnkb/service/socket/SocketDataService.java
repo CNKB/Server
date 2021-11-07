@@ -12,22 +12,28 @@ import java.util.Map;
 
 @Component
 public class SocketDataService implements SocketService {
-
+    
+    @NonNull
+    @Override
+    public String getRequest() {
+        return "data";
+    }
+    
     @Override
     public SocketOutput handleData(@NonNull Player player, @NonNull WebSocketSession session) {
         Map<String, Object> data = new HashMap<>();
-
+        
         data.put("category",
-                new HashMap<String, Object>() {{
-                    put("upDown", new SocketInnerData.UpDownButton("game.up_down", 1, 1));//TODO
-                }}
+            new HashMap<String, Object>() {{
+                put("upDown", new SocketInnerData.UpDownButton("game.up_down", 1, 1));//TODO
+            }}
         );
-
+        
         return SocketOutput
-                .builder()
-                .message("Success")
-                .data(data)
-                .build();
+            .builder()
+            .message("Success")
+            .data(data)
+            .build();
     }
-
+    
 }

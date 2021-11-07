@@ -8,7 +8,7 @@ import org.springframework.lang.NonNull;
 import java.util.List;
 
 public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
-
+    
     List<UserRole> findAllByPk_User(@NonNull User user);
-
+    
 }

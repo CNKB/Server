@@ -6,7 +6,7 @@ import lkd.namsic.cnkb.dto.Response;
 import javax.servlet.http.HttpServletRequest;
 
 public interface PlayerService {
-
+    
     Response createPlayer(HttpServletRequest request, Player player);
-
+    
 }

@@ -6,9 +6,9 @@ import lombok.ToString;
 @Getter
 @ToString
 public class SignInInput {
-
+    
     String email;
     String provider;
     String uid;
-
+    
 }

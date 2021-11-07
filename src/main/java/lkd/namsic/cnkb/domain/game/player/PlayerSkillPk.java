@@ -1,6 +1,9 @@
 package lkd.namsic.cnkb.domain.game.player;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
@@ -11,33 +14,32 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class PlayerSkillPk implements Serializable {
-
+    
     @ManyToOne
     @JoinColumn(name = "user_id")
     Player player;
-
+    
     @ManyToOne
     @JoinColumn(name = "skill_id")
     Skill skill;
-
+    
     @Override
     public int hashCode() {
         return player.id.hashCode() ^ skill.id.hashCode();
     }
-
+    
     @Override
     public boolean equals(Object obj) {
         if(this == obj) return true;
-
-        if (obj instanceof PlayerSkillPk pk) {
+        
+        if(obj instanceof PlayerSkillPk pk) {
             return player.id.equals(pk.player.id) &&
-                    skill.id.equals(pk.skill.id);
+                skill.id.equals(pk.skill.id);
         } else {
             return false;
         }
     }
-
+    
 }

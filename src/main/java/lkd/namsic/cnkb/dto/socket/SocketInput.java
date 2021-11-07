@@ -9,10 +9,10 @@ import java.util.Map;
 @Getter
 @ToString
 public class SocketInput {
-
+    
+    final Map<String, Object> data = new HashMap<>();
     Long playerId;
     String request;
     String accessToken;
-    final Map<String, Object> data = new HashMap<>();
-
+    
 }

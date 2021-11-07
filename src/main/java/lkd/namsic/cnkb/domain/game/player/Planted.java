@@ -1,7 +1,10 @@
 package lkd.namsic.cnkb.domain.game.player;
 
 import lkd.namsic.cnkb.domain.game.item.Plant;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -10,25 +13,24 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class Planted {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     Long id;
-
+    
     @Builder.Default
     @Column(nullable = false)
     LocalDateTime lastHarvestTime = LocalDateTime.now();
-
+    
     @ManyToOne
     @JoinColumn(name = "player_id", nullable = false)
     Player player;
-
+    
     @ManyToOne
     @JoinColumn(name = "plant_id", nullable = false)
     Plant plant;
-
+    
 }
