@@ -3,8 +3,10 @@ package lkd.namsic.cnkb.dto.socket;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
+import java.util.Collections;
 import java.util.Map;
 
 @Getter
@@ -15,10 +17,13 @@ public class SocketOutput {
     @Builder.Default
     Integer status = HttpStatus.OK.value();
     
-    @NonNull
+    @Setter
+    String request;
+    
     String message;
     
-    @NonNull
-    Map<String, Object> data;
+    @SuppressWarnings("unchecked")
+    @Builder.Default
+    Map<String, Object> data = Collections.EMPTY_MAP;
     
 }

@@ -1,13 +1,13 @@
 package lkd.namsic.cnkb;
 
 import lkd.namsic.cnkb.config.init.GameInitializer;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import javax.annotation.PostConstruct;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @SpringBootApplication
 public class CnkbApplication {
     

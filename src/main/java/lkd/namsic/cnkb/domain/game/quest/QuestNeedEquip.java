@@ -1,18 +1,16 @@
 package lkd.namsic.cnkb.domain.game.quest;
 
 import lkd.namsic.cnkb.domain.game.item.Equipment;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class QuestNeedEquip {
     
     @Id

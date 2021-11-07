@@ -1,18 +1,16 @@
 package lkd.namsic.cnkb.domain.game.chat;
 
 import lkd.namsic.cnkb.domain.game.npc.Npc;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ChatResponse {
     
     @Id

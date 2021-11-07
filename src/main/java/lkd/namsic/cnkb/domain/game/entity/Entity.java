@@ -2,10 +2,7 @@ package lkd.namsic.cnkb.domain.game.entity;
 
 import lkd.namsic.cnkb.domain.game.chat.Chat;
 import lkd.namsic.cnkb.domain.game.map.GameMapRespawn;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,8 +11,9 @@ import java.util.List;
 @javax.persistence.Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Entity {
     
     @Id

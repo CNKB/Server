@@ -5,10 +5,7 @@ import lkd.namsic.cnkb.domain.game.npc.NpcShop;
 import lkd.namsic.cnkb.domain.game.npc.NpcShopSimple;
 import lkd.namsic.cnkb.domain.game.quest.QuestNeedEquip;
 import lkd.namsic.cnkb.domain.game.quest.QuestRewardEquip;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,8 +14,9 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Equipment {
     
     @Id

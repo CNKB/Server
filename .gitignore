@@ -32,8 +32,6 @@ build/
 ### VS Code ###
 .vscode/
 
-*Test.java
-*Tests.java
 .gradle/
 .idea/
 gradle/

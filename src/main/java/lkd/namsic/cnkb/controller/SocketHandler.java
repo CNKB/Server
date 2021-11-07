@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lkd.namsic.cnkb.dto.socket.SocketInput;
 import lkd.namsic.cnkb.dto.socket.SocketOutput;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SocketHandler extends TextWebSocketHandler {
     
     public static final Map<String, Long> sessionMap = new ConcurrentHashMap<>();
@@ -60,7 +60,7 @@ public class SocketHandler extends TextWebSocketHandler {
         
         SocketOutput output = socketDispatcher.executeService(input, session);
         
-        log.info("Session - {} {} {} {}", input.getPlayerId(), input.getRequest(), output.getStatus(), output.getMessage());
+        log.info("Session - {} {} {} {}", output.getStatus(), input.getPlayerId(), input.getRequest(), output.getMessage());
         session.sendMessage(new TextMessage(objectMapper.writeValueAsString(output)));
         
         if(output.getStatus() == -1) {

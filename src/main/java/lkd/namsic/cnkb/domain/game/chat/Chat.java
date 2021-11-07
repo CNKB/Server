@@ -4,10 +4,7 @@ import lkd.namsic.cnkb.domain.game.entity.Entity;
 import lkd.namsic.cnkb.domain.game.npc.Npc;
 import lkd.namsic.cnkb.domain.game.npc.NpcChat;
 import lkd.namsic.cnkb.domain.game.quest.Quest;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,8 +13,9 @@ import java.util.List;
 @javax.persistence.Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Chat {
     
     @Id

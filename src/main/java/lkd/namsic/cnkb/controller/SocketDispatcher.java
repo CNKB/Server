@@ -7,7 +7,7 @@ import lkd.namsic.cnkb.dto.socket.SocketOutput;
 import lkd.namsic.cnkb.exception.CommonException;
 import lkd.namsic.cnkb.repository.PlayerRepository;
 import lkd.namsic.cnkb.service.socket.SocketService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SocketDispatcher {
     
     private static Map<String, SocketService> serviceMap;
@@ -68,7 +68,10 @@ public class SocketDispatcher {
             }
             
             Player player = playerRepository.findById(playerId).orElseThrow(RuntimeException::new);
-            return service.handleData(player, session);
+            SocketOutput output = service.handleData(player, session);
+            
+            output.setRequest(request);
+            return output;
         } catch(CommonException e) {
             log.info("Common Exception - {} {}", e.getMessage(), playerId);
             

@@ -5,7 +5,7 @@ import lkd.namsic.cnkb.domain.User;
 import lkd.namsic.cnkb.dto.Response;
 import lkd.namsic.cnkb.dto.user.SignInInput;
 import lkd.namsic.cnkb.service.UserService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
     

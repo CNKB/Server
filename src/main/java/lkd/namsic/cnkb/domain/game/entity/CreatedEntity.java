@@ -2,10 +2,7 @@ package lkd.namsic.cnkb.domain.game.entity;
 
 import lkd.namsic.cnkb.domain.game.map.GameMap;
 import lkd.namsic.cnkb.enums.Doing;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -17,8 +14,9 @@ import java.util.List;
 @javax.persistence.Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreatedEntity {
     
     @Id

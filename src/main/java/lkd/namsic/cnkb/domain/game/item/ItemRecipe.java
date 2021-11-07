@@ -1,10 +1,7 @@
 package lkd.namsic.cnkb.domain.game.item;
 
 import lkd.namsic.cnkb.domain.game.quest.QuestRewardItemRecipe;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,8 +10,9 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ItemRecipe {
     
     @Id

@@ -4,12 +4,12 @@ import lkd.namsic.cnkb.base.Location;
 import lkd.namsic.cnkb.domain.game.map.GameMap;
 import lkd.namsic.cnkb.enums.MapType;
 import lkd.namsic.cnkb.repository.GameMapRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class GameMapInitializer extends Initializer {
     
     private final GameMapRepository gameMapRepository;
@@ -26,12 +26,14 @@ public class GameMapInitializer extends Initializer {
         int hex = Location.builder().x(x).y(y).build().toHex();
         
         if(gameMapRepository.findById(hex).isEmpty()) {
-            GameMap.builder()
-                .location(hex)
-                .name(mapName)
-                .requireLv(requireLv)
-                .mapType(mapType.value)
-                .build();
+            gameMapRepository.save(
+                GameMap.builder()
+                    .location(hex)
+                    .name(mapName)
+                    .requireLv(requireLv)
+                    .mapType(mapType.value)
+                    .build()
+            );
         }
     }
     

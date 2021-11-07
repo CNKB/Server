@@ -2,18 +2,16 @@ package lkd.namsic.cnkb.domain.game.npc;
 
 import lkd.namsic.cnkb.domain.game.item.Equipment;
 import lkd.namsic.cnkb.domain.game.item.Item;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class NpcShopSimple {
     
     @Id

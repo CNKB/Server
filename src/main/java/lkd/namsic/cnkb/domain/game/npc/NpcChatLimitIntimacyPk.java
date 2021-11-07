@@ -1,9 +1,6 @@
 package lkd.namsic.cnkb.domain.game.npc;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
@@ -13,8 +10,9 @@ import java.io.Serializable;
 @Embeddable
 @Getter
 @Setter
-@NoArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class NpcChatLimitIntimacyPk implements Serializable {
     
     @ManyToOne

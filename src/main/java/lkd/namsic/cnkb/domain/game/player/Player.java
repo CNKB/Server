@@ -4,12 +4,12 @@ import lkd.namsic.cnkb.domain.User;
 import lkd.namsic.cnkb.domain.game.entity.*;
 import lkd.namsic.cnkb.domain.game.map.GameMap;
 import lkd.namsic.cnkb.enums.Doing;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lkd.namsic.cnkb.enums.VariableType;
+import lkd.namsic.cnkb.repository.LivingVariableRepository;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.Entity;
 import javax.persistence.*;
@@ -17,12 +17,15 @@ import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @Builder
+@Component
+@NoArgsConstructor
+@AllArgsConstructor
 public class Player {
     
     @Id

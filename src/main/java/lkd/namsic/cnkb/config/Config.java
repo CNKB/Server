@@ -21,6 +21,8 @@ import java.util.concurrent.Callable;
 @Component
 public class Config {
     
+    //TODO: Change Living tables to unique
+    
     @NonNull
     public final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd", Locale.KOREA);
     

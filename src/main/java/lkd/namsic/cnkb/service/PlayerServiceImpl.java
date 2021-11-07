@@ -1,15 +1,18 @@
 package lkd.namsic.cnkb.service;
 
+import lkd.namsic.cnkb.base.Location;
 import lkd.namsic.cnkb.config.Config;
 import lkd.namsic.cnkb.domain.User;
+import lkd.namsic.cnkb.domain.game.map.GameMap;
 import lkd.namsic.cnkb.domain.game.player.Player;
 import lkd.namsic.cnkb.domain.game.player.PlayerTitle;
 import lkd.namsic.cnkb.dto.Response;
 import lkd.namsic.cnkb.exception.CommonException;
+import lkd.namsic.cnkb.repository.GameMapRepository;
 import lkd.namsic.cnkb.repository.PlayerRepository;
 import lkd.namsic.cnkb.repository.PlayerTitleRepository;
 import lkd.namsic.cnkb.repository.UserRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -18,13 +21,14 @@ import java.util.List;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PlayerServiceImpl implements PlayerService {
     
     private final Config config;
     private final UserRepository userRepository;
     private final PlayerRepository playerRepository;
     private final PlayerTitleRepository playerTitleRepository;
+    private final GameMapRepository gameMapRepository;
     
     @Override
     public Response createPlayer(HttpServletRequest request, Player player) {
@@ -61,10 +65,16 @@ public class PlayerServiceImpl implements PlayerService {
             User user = userRepository.findById(userId).orElseThrow(
                 () -> new CommonException(409, "Unknown user")
             );
+    
+            GameMap gameMap = gameMapRepository.findById(
+                Location.builder().x(1).y(1).build().toHex()
+            ).orElseThrow(RuntimeException::new);
             
             Player createdPlayer = Player.builder()
                 .user(user)
                 .name(name)
+                .gameMap(gameMap)
+                .baseGameMap(gameMap)
                 .build();
             createdPlayer = playerRepository.save(createdPlayer);
             

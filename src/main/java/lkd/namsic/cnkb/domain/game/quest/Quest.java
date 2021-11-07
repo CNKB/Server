@@ -6,10 +6,7 @@ import lkd.namsic.cnkb.domain.game.npc.Npc;
 import lkd.namsic.cnkb.domain.game.npc.NpcChatLimitCurrentQuest;
 import lkd.namsic.cnkb.domain.game.npc.NpcChatLimitIntimacy;
 import lkd.namsic.cnkb.domain.game.npc.NpcChatLimitQuest;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigInteger;
@@ -19,8 +16,9 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Quest {
     
     @Id

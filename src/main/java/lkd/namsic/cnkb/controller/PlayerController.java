@@ -4,7 +4,7 @@ import lkd.namsic.cnkb.config.Config;
 import lkd.namsic.cnkb.domain.game.player.Player;
 import lkd.namsic.cnkb.dto.Response;
 import lkd.namsic.cnkb.service.PlayerService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/player")
 public class PlayerController {
     

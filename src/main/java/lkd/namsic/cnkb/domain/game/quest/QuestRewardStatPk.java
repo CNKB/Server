@@ -1,9 +1,6 @@
 package lkd.namsic.cnkb.domain.game.quest;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -14,8 +11,9 @@ import java.io.Serializable;
 @Embeddable
 @Getter
 @Setter
-@NoArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class QuestRewardStatPk implements Serializable {
     
     @Column(columnDefinition = "TINYINT UNSIGNED")

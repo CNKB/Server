@@ -9,7 +9,6 @@ import org.springframework.lang.Nullable;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @Builder
 public class Location {
     

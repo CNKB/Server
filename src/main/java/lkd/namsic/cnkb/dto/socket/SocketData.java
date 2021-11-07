@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.ToString;
 import org.springframework.lang.NonNull;
 
-public class SocketInnerData {
+public class SocketData {
     
     @ToString
     @Getter
@@ -13,6 +13,11 @@ public class SocketInnerData {
         
         public Button(@NonNull String buttonName) {
             this.buttonName = buttonName;
+        }
+       
+        @NonNull
+        public static String getName() {
+            return "button";
         }
     }
     
@@ -25,6 +30,11 @@ public class SocketInnerData {
             super(buttonName);
             this.min = min;
             this.max = max;
+        }
+    
+        @NonNull
+        public static String getName() {
+            return "upDownButton";
         }
     }
     

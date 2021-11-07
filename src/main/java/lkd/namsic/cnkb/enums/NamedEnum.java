@@ -1,5 +1,6 @@
 package lkd.namsic.cnkb.enums;
 
+import com.google.common.base.CaseFormat;
 import org.springframework.lang.NonNull;
 
 public interface NamedEnum {
@@ -8,8 +9,8 @@ public interface NamedEnum {
     String getBase();
     
     @NonNull
-    default String getName(Enum<?> e) {
-        return this.getBase() + "." + e.name().toLowerCase();
+    static <T extends Enum<?> & NamedEnum> String getName(T t) {
+        return t.getBase() + "." + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, t.name().toLowerCase());
     }
     
 }

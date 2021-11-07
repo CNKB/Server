@@ -2,12 +2,12 @@ package lkd.namsic.cnkb.config.init;
 
 import lkd.namsic.cnkb.domain.Role;
 import lkd.namsic.cnkb.repository.RoleRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class RoleInitializer extends Initializer {
     
     private final RoleRepository roleRepository;

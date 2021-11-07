@@ -13,7 +13,7 @@ public class SocketDisconnectService implements SocketService {
     @NonNull
     @Override
     public String getRequest() {
-        return "Disconnect";
+        return "disconnect";
     }
     
     @Override
