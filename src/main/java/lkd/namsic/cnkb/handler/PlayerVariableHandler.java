@@ -5,6 +5,7 @@ import lkd.namsic.cnkb.domain.game.living.LivingVariableUnique;
 import lkd.namsic.cnkb.domain.game.player.Player;
 import lkd.namsic.cnkb.enums.VariableType;
 import lkd.namsic.cnkb.repository.LivingVariableRepository;
+import lkd.namsic.cnkb.repository.LivingVariableUniqueRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,16 +17,23 @@ import java.util.Optional;
 public class PlayerVariableHandler {
 
     private final LivingVariableRepository livingVariableRepository;
+    private final LivingVariableUniqueRepository livingVariableUniqueRepository;
 
     public String getVariableString(@NonNull Player player, @NonNull VariableType variableType, String defaultValue) {
-        Optional<LivingVariable> optional = livingVariableRepository.findByLivingAndVariable(
-            LivingVariableUnique.builder().player(player).build(), variableType.value
-        );
+        Optional<LivingVariableUnique> optionalLiving = livingVariableUniqueRepository.findByPlayer(player);
 
-        if(optional.isEmpty()) {
+        if(optionalLiving.isEmpty()) {
             return defaultValue;
         } else {
-            return optional.get().getData();
+            Optional<LivingVariable> optionalVariable = livingVariableRepository.findByLivingAndVariable(
+                optionalLiving.get(), variableType.value
+            );
+
+            if(optionalVariable.isEmpty()) {
+                return defaultValue;
+            } else {
+                return optionalVariable.get().getData();
+            }
         }
     }
 
