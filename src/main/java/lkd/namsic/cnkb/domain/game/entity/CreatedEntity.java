@@ -1,5 +1,6 @@
 package lkd.namsic.cnkb.domain.game.entity;
 
+import lkd.namsic.cnkb.domain.game.living.*;
 import lkd.namsic.cnkb.domain.game.map.GameMap;
 import lkd.namsic.cnkb.enums.Doing;
 import lombok.*;
@@ -18,73 +19,73 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreatedEntity {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     Long id;
-    
+
     @CreationTimestamp
     @Column(nullable = false)
     LocalDateTime created;
-    
+
     @Builder.Default
     @Column(columnDefinition = "SMALLINT UNSIGNED NOT NULL")
     Integer lv = 1;
-    
+
     @Builder.Default
     @Column(nullable = false)
     Long exp = 0L;
-    
+
     @Builder.Default
     @Column(columnDefinition = "BIGINT UNSIGNED NOT NULL")
     BigInteger money = new BigInteger("0");
-    
+
     @Builder.Default
     @Column(columnDefinition = "TINYINT UNSIGNED NOT NULL")
     Integer doing = Doing.NONE.value;
-    
+
     @Column(nullable = false)
     Integer location;
-    
+
     @ManyToOne
     @JoinColumn(name = "entity_id", nullable = false)
     Entity entity;
-    
+
     @ManyToOne
     @JoinColumn(nullable = false)
     GameMap gameMap;
-    
+
     @Builder.Default
     @OneToMany(mappedBy = "pk.createdEntity", cascade = CascadeType.ALL)
     List<CreatedEntitySkill> createdEntitySkillList = new ArrayList<>();
-    
+
     @Builder.Default
     @OneToMany(mappedBy = "pk.createdEntity", cascade = CascadeType.ALL)
     List<CreatedEntityAngry> createdEntityAngryList = new ArrayList<>();
-    
+
     @Builder.Default
     @OneToMany(mappedBy = "createdEntity", cascade = CascadeType.ALL)
-    List<LivingEquip> livingEquipList = new ArrayList<>();
-    
+    List<LivingEquipUnique> livingEquipUniqueList = new ArrayList<>();
+
     @Builder.Default
     @OneToMany(mappedBy = "createdEntity", cascade = CascadeType.ALL)
-    List<LivingEvent> livingEventList = new ArrayList<>();
-    
+    List<LivingEventUnique> livingEventUniqueList = new ArrayList<>();
+
     @Builder.Default
     @OneToMany(mappedBy = "createdEntity", cascade = CascadeType.ALL)
-    List<LivingItem> livingItemList = new ArrayList<>();
-    
+    List<LivingItemUnique> livingItemUniqueList = new ArrayList<>();
+
     @Builder.Default
     @OneToMany(mappedBy = "createdEntity", cascade = CascadeType.ALL)
-    List<LivingStat> livingStatList = new ArrayList<>();
-    
+    List<LivingStatUnique> livingStatUniqueList = new ArrayList<>();
+
     @Builder.Default
     @OneToMany(mappedBy = "createdEntity", cascade = CascadeType.ALL)
-    List<LivingVariable> livingVariableList = new ArrayList<>();
-    
+    List<LivingVariableUnique> livingVariableUniqueList = new ArrayList<>();
+
     @Builder.Default
     @OneToMany(mappedBy = "createdEntity", cascade = CascadeType.ALL)
     List<CreatedEntityTag> createdEntityTagList = new ArrayList<>();
-    
+
 }

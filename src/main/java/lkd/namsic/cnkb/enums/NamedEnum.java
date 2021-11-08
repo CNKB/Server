@@ -4,13 +4,13 @@ import com.google.common.base.CaseFormat;
 import org.springframework.lang.NonNull;
 
 public interface NamedEnum {
-    
-    @NonNull
-    String getBase();
-    
+
     @NonNull
     static <T extends Enum<?> & NamedEnum> String getName(T t) {
         return t.getBase() + "." + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, t.name().toLowerCase());
     }
-    
+
+    @NonNull
+    String getBase();
+
 }
