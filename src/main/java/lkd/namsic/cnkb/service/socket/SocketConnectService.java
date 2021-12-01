@@ -3,6 +3,7 @@ package lkd.namsic.cnkb.service.socket;
 import lkd.namsic.cnkb.config.Config;
 import lkd.namsic.cnkb.domain.game.player.Player;
 import lkd.namsic.cnkb.dto.socket.SocketOutput;
+import lkd.namsic.cnkb.exception.SessionCloseException;
 import lkd.namsic.cnkb.handler.SocketHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
@@ -25,18 +26,23 @@ public class SocketConnectService implements SocketService {
     }
 
     @Override
-    public SocketOutput handleData(@NonNull Player player, @NonNull WebSocketSession session) {
+    public SocketOutput handleData(@NonNull Player player, @NonNull WebSocketSession session,
+                                   @NonNull Map<String, Object> inputData) {
         long playerId = player.getId();
         String sessionId = session.getId();
         Map<String, Object> data = new HashMap<>();
 
         if(SocketHandler.sessionMap.remove(sessionId) != null) {
-            return SocketOutput
-                .builder()
-                .status(-1)
-                .message("Multi connection with playerId - " + playerId)
-                .data(data)
-                .build();
+            SocketHandler.sendMessage(
+                session,
+                SocketOutput
+                    .builder()
+                    .status(-1)
+                    .message("Multi connection with playerId - " + playerId)
+                    .data(data)
+                    .build()
+            );
+            throw new SessionCloseException();
         }
 
         SocketHandler.sessionMap.put(sessionId, playerId);

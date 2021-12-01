@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 @Getter
@@ -22,8 +23,7 @@ public class SocketOutput {
     
     String message;
     
-    @SuppressWarnings("unchecked")
     @Builder.Default
-    Map<String, Object> data = Collections.EMPTY_MAP;
+    Map<String, Object> data = new HashMap<>();
     
 }

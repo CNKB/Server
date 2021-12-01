@@ -9,8 +9,7 @@ public class EnumFinder<T extends Enum<?>> {
     
     private final Map<Integer, T> map = new LinkedHashMap<>();
     
-    private EnumFinder() {
-    }
+    private EnumFinder() {}
     
     public static <T extends Enum<?>> EnumFinder<T> getFinder(@NonNull T[] values) {
         EnumFinder<T> enumFinder = new EnumFinder<>();

@@ -4,7 +4,9 @@ import lkd.namsic.cnkb.bearer.JwtTokenProvider;
 import lkd.namsic.cnkb.domain.game.player.Player;
 import lkd.namsic.cnkb.dto.socket.SocketInput;
 import lkd.namsic.cnkb.dto.socket.SocketOutput;
+import lkd.namsic.cnkb.enums.Doing;
 import lkd.namsic.cnkb.exception.CommonException;
+import lkd.namsic.cnkb.exception.SessionCloseException;
 import lkd.namsic.cnkb.repository.PlayerRepository;
 import lkd.namsic.cnkb.service.socket.SocketService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
+import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
@@ -21,12 +24,13 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SocketDispatcher {
+public class SocketController {
     
     private static Map<String, SocketService> serviceMap;
+    private final List<SocketService> socketServiceList;
+    
     private final JwtTokenProvider jwtTokenProvider;
     private final PlayerRepository playerRepository;
-    private final List<SocketService> socketServiceList;
     
     @PostConstruct
     public void init() {
@@ -45,8 +49,11 @@ public class SocketDispatcher {
         }
     }
     
-    public SocketOutput executeService(@NonNull SocketInput input,
-                                       @NonNull WebSocketSession session) {
+    @Nullable
+    public SocketOutput executeService (
+        @NonNull SocketInput input,
+        @NonNull WebSocketSession session
+    ) throws SessionCloseException {
         String request = input.getRequest();
         Long playerId = input.getPlayerId();
         String accessToken = input.getAccessToken();
@@ -67,10 +74,16 @@ public class SocketDispatcher {
                 throw new CommonException(400, "Unknown request - " + request);
             }
             
+            SocketOutput output;
             Player player = playerRepository.findById(playerId).orElseThrow(RuntimeException::new);
-            SocketOutput output = service.handleData(player, session);
             
-            output.setRequest(request);
+            if(player.getDoing() != Doing.NONE.value && service.invalidOnDoing()) {
+                output = null;
+            } else {
+                output = service.handleData(player, session, input.getData());
+                output.setRequest(request);
+            }
+            
             return output;
         } catch(CommonException e) {
             log.info("Common Exception - {} {}", e.getMessage(), playerId);

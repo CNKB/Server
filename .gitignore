@@ -37,3 +37,4 @@ build/
 gradle/
 firebase.json
 *.properties
+src/main/resources/META-INF/additional-spring-configuration-metadata.json
