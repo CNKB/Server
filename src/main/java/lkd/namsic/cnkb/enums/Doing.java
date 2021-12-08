@@ -2,7 +2,7 @@ package lkd.namsic.cnkb.enums;
 
 import org.springframework.lang.NonNull;
 
-public enum Doing implements NamedEnum {
+public enum Doing implements NamedEnum, ValuedEnum<Integer> {
     
     NONE(0),
     ADVENTURE(1),
@@ -17,7 +17,7 @@ public enum Doing implements NamedEnum {
     SHOP(10),
     WAIT_RESPONSE(11);
     
-    public static final EnumFinder<Doing> finder = EnumFinder.getFinder(Doing.values());
+    public static final EnumFinder<Integer, Doing> finder = EnumFinder.getFinder(Doing.values());
     public final int value;
     
     Doing(int value) {
@@ -29,5 +29,8 @@ public enum Doing implements NamedEnum {
     public String getBase() {
         return "doing";
     }
+    
+    @Override
+    public Integer getValue() { return this.value; }
     
 }

@@ -26,15 +26,23 @@ public class Location {
             .fieldY(hex & ander)
             .build();
     }
+    
+    public static int toHex(int x, int y) {
+        return toHex(x, y, 0, 0);
+    }
+    
+    public static int toHex(int x, int y, int fieldX, int fieldY) {
+        int hexLocation = 0x00000000;
+        hexLocation |= x << 24;
+        hexLocation |= y << 16;
+        hexLocation |= fieldX << 8;
+        hexLocation |= fieldY;
+    
+        return hexLocation;
+    }
 
     public int toHex() {
-        int hexLocation = 0x00000000;
-        hexLocation |= this.x << 24;
-        hexLocation |= this.y << 16;
-        hexLocation |= this.fieldX << 8;
-        hexLocation |= this.fieldY;
-
-        return hexLocation;
+        return toHex(this.x, this.y, this.fieldX, this.fieldY);
     }
 
     @Override

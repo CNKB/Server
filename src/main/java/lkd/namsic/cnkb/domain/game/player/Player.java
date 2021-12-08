@@ -1,6 +1,7 @@
 package lkd.namsic.cnkb.domain.game.player;
 
 import lkd.namsic.cnkb.domain.User;
+import lkd.namsic.cnkb.domain.game.GameLog;
 import lkd.namsic.cnkb.domain.game.entity.CreatedEntityAngry;
 import lkd.namsic.cnkb.domain.game.living.*;
 import lkd.namsic.cnkb.domain.game.map.GameMap;
@@ -124,5 +125,9 @@ public class Player {
     @Builder.Default
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL)
     List<LivingVariableUnique> livingVariableUniqueList = new ArrayList<>();
+    
+    @Builder.Default
+    @OneToMany(mappedBy = "player", cascade = CascadeType.ALL)
+    List<GameLog> gameLogList = new ArrayList<>();
 
 }

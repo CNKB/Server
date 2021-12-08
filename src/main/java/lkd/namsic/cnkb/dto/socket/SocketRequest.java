@@ -8,7 +8,7 @@ import java.util.Map;
 
 @Getter
 @ToString
-public class SocketInput {
+public class SocketRequest {
     
     final Map<String, Object> data = new HashMap<>();
     Long playerId;

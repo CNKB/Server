@@ -1,5 +1,6 @@
 package lkd.namsic.cnkb.domain.game.entity;
 
+import lkd.namsic.cnkb.domain.game.GameLog;
 import lkd.namsic.cnkb.domain.game.living.*;
 import lkd.namsic.cnkb.domain.game.map.GameMap;
 import lkd.namsic.cnkb.enums.Doing;
@@ -87,5 +88,9 @@ public class CreatedEntity {
     @Builder.Default
     @OneToMany(mappedBy = "createdEntity", cascade = CascadeType.ALL)
     List<CreatedEntityTag> createdEntityTagList = new ArrayList<>();
+    
+    @Builder.Default
+    @OneToMany(mappedBy = "createdEntity", cascade = CascadeType.ALL)
+    List<GameLog> gameLogList = new ArrayList<>();
 
 }

@@ -7,7 +7,7 @@ import lkd.namsic.cnkb.domain.game.map.GameMap;
 import lkd.namsic.cnkb.domain.game.player.Player;
 import lkd.namsic.cnkb.domain.game.player.PlayerTitle;
 import lkd.namsic.cnkb.dto.Response;
-import lkd.namsic.cnkb.exception.CommonException;
+import lkd.namsic.cnkb.exception.StatusException;
 import lkd.namsic.cnkb.repository.GameMapRepository;
 import lkd.namsic.cnkb.repository.PlayerRepository;
 import lkd.namsic.cnkb.repository.PlayerTitleRepository;
@@ -36,21 +36,21 @@ public class PlayerServiceImpl implements PlayerService {
             String name = player.getName();
             
             if(name == null) {
-                throw new CommonException(412, "Requires name");
+                throw new StatusException(412, "Requires name");
             }
             
             if(name.length() < 2 || name.length() > 16) {
-                throw new CommonException(406, "Invalid length - 2,16");
+                throw new StatusException(406, "Invalid length - 2,16");
             }
             
             String replacedName = name.replace(config.REGEX, "");
             if(!name.equals(replacedName)) {
-                throw new CommonException(406, "Invalid regex - " + replacedName);
+                throw new StatusException(406, "Invalid regex - " + replacedName);
             }
             
             for(String invalidWord : config.INVALID_WORD_LIST) {
                 if(name.contains(invalidWord)) {
-                    throw new CommonException(406, "Invalid word - " + invalidWord);
+                    throw new StatusException(406, "Invalid word - " + invalidWord);
                 }
             }
             
@@ -58,17 +58,15 @@ public class PlayerServiceImpl implements PlayerService {
             
             List<Player> playerList = playerRepository.findAllByUserId(userId);
             if(playerList.size() >= config.MAX_PLAYER_COUNT) {
-                throw new CommonException(400,
-                    "Player count reached max(" + config.MAX_PLAYER_COUNT + ")");
+                throw new StatusException(400, "Player count reached max(" + config.MAX_PLAYER_COUNT + ")");
             }
             
             User user = userRepository.findById(userId).orElseThrow(
-                () -> new CommonException(409, "Unknown user")
+                () -> new StatusException(409, "Unknown user")
             );
     
-            GameMap gameMap = gameMapRepository.findById(
-                Location.builder().x(1).y(1).build().toHex()
-            ).orElseThrow(RuntimeException::new);
+            GameMap gameMap = gameMapRepository.findById(Location.toHex(1, 1))
+                .orElseThrow(RuntimeException::new);
             
             Player createdPlayer = Player.builder()
                 .user(user)

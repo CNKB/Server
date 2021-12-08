@@ -2,7 +2,7 @@ package lkd.namsic.cnkb.enums;
 
 import org.springframework.lang.NonNull;
 
-public enum EquipType implements NamedEnum {
+public enum EquipType implements NamedEnum, ValuedEnum<Integer> {
     
     WEAPON(1),
     HELMET(2),
@@ -16,7 +16,7 @@ public enum EquipType implements NamedEnum {
     HEART_GEM(10),
     AMULET(11);
     
-    public static final EnumFinder<EquipType> finder = EnumFinder.getFinder(EquipType.values());
+    public static final EnumFinder<Integer, EquipType> finder = EnumFinder.getFinder(EquipType.values());
     public final int value;
     
     EquipType(int value) {
@@ -28,5 +28,8 @@ public enum EquipType implements NamedEnum {
     public String getBase() {
         return "equipType";
     }
+    
+    @Override
+    public Integer getValue() { return this.value; }
     
 }

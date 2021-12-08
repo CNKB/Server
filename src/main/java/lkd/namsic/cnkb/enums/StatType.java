@@ -2,7 +2,7 @@ package lkd.namsic.cnkb.enums;
 
 import org.springframework.lang.NonNull;
 
-public enum StatType implements NamedEnum {
+public enum StatType implements NamedEnum, ValuedEnum<Integer> {
     
     MAXHP(1, 1),
     HP(2, 0),
@@ -21,7 +21,7 @@ public enum StatType implements NamedEnum {
     EVA(15, 15),
     ACC(16, 16);
     
-    public static final EnumFinder<StatType> finder = EnumFinder.getFinder(StatType.values());
+    public static final EnumFinder<Integer, StatType> finder = EnumFinder.getFinder(StatType.values());
     public final int value;
     public final int useSp;
     
@@ -35,5 +35,8 @@ public enum StatType implements NamedEnum {
     public String getBase() {
         return "statType";
     }
+    
+    @Override
+    public Integer getValue() { return this.value; }
     
 }

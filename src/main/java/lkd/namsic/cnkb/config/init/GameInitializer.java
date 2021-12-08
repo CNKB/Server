@@ -9,15 +9,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class GameInitializer {
     
-    private final RoleInitializer roleInitializer;
-    private final GameMapInitializer gameMapInitializer;
+    private final Initializer[] initializers;
     
     public void initDb() {
-        log.info("Initializing Roles");
-        roleInitializer.init();
-        
-        log.info("Initializing GameMaps");
-        gameMapInitializer.init();
+        for(Initializer initializer : initializers) {
+            log.info("Initializing " + initializer.getName() + "s");
+            initializer.init();
+        }
     }
     
 }

@@ -11,7 +11,7 @@ import lkd.namsic.cnkb.domain.*;
 import lkd.namsic.cnkb.domain.game.player.Player;
 import lkd.namsic.cnkb.dto.Response;
 import lkd.namsic.cnkb.dto.user.SignInInput;
-import lkd.namsic.cnkb.exception.CommonException;
+import lkd.namsic.cnkb.exception.StatusException;
 import lkd.namsic.cnkb.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,17 +69,17 @@ public class UserServiceImpl implements UserService {
             String uid = input.getUid();
             
             if(email == null) {
-                throw new CommonException(412, "Requires email");
+                throw new StatusException(412, "Requires email");
             } else if(provider == null) {
-                throw new CommonException(412, "Requires provider");
+                throw new StatusException(412, "Requires provider");
             } else if(uid == null || uid.isEmpty()) {
-                throw new CommonException(412, "Requires uid");
+                throw new StatusException(412, "Requires uid");
             }
             
             try {
                 FirebaseAuth.getInstance().getUser(uid);
             } catch(FirebaseAuthException e) {
-                throw new CommonException(400, "Unknown uid");
+                throw new StatusException(400, "Unknown uid");
             }
             
             String ipString = config.getIp(request);
@@ -161,11 +161,11 @@ public class UserServiceImpl implements UserService {
         return config.safeCall("getPlayers", () -> {
             long userId = jwtTokenProvider.validateToken(tokenInput);
             if(userId == 0) {
-                throw new CommonException(401, "Unauthorized");
+                throw new StatusException(401, "Unauthorized");
             }
             
             User user = userRepository.findById(userId).orElseThrow(
-                () -> new CommonException(409, "Unknown user")
+                () -> new StatusException(409, "Unknown user")
             );
             
             return Response.builder()

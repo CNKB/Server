@@ -20,9 +20,6 @@ public class GameMap {
     @Column
     Integer location;
     
-    @Column(nullable = false, length = 63, unique = true)
-    String name;
-    
     @Column(columnDefinition = "SMALLINT UNSIGNED NOT NULL")
     Integer requireLv;
     

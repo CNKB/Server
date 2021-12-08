@@ -1,5 +1,6 @@
 package lkd.namsic.cnkb.domain;
 
+import lkd.namsic.cnkb.domain.game.GameLog;
 import lkd.namsic.cnkb.domain.game.player.Player;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -58,5 +59,9 @@ public class User {
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     List<Player> playerList = new ArrayList<>();
+    
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    List<GameLog> gameLogList = new ArrayList<>();
     
 }

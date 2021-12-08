@@ -3,8 +3,8 @@ package lkd.namsic.cnkb.handler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lkd.namsic.cnkb.controller.SocketController;
-import lkd.namsic.cnkb.dto.socket.SocketInput;
-import lkd.namsic.cnkb.dto.socket.SocketOutput;
+import lkd.namsic.cnkb.dto.socket.SocketRequest;
+import lkd.namsic.cnkb.dto.socket.SocketResponse;
 import lkd.namsic.cnkb.exception.SessionCloseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,43 +43,44 @@ public class SocketHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, @NonNull TextMessage message) throws Exception {
         String payload = message.getPayload();
-        SocketInput input;
-
+        SocketRequest request;
+        
         try {
-            input = objectMapper.readValue(payload, SocketInput.class);
+            request = objectMapper.readValue(payload, SocketRequest.class);
         } catch(JsonProcessingException e) {
-            SocketOutput output = SocketOutput.builder()
-                .status(400)
-                .message(e.getMessage())
-                .build();
+            sendMessage(
+                session,
+                SocketResponse.builder()
+                    .status(400)
+                    .message(e.getMessage())
+                    .build()
+            );
 
-            String outputString = objectMapper.writeValueAsString(output);
-            session.sendMessage(new TextMessage(outputString));
-
-            log.info("Session Parsing Error - {} {}", payload, e.getMessage());
+            log.error("Error while parsing message - " + payload, e);
             return;
         }
         
-        SocketOutput output = null;
+        SocketResponse output = null;
 
         try {
-            output = socketController.executeService(input, session);
+            output = socketController.executeService(request, session);
         } catch(SessionCloseException e) {
             session.close();
+            return;
+        } catch(Exception e) {
+            session.close();
+            e.printStackTrace();
+            
             return;
         }
     
         if(output != null) {
-            log.info(
-                "Session - {} {} {} {}",
-                output.getStatus(), input.getPlayerId(), input.getRequest(), output.getMessage()
-            );
             sendMessage(session, output);
         }
     }
     
     public static void sendMessage(@NonNull WebSocketSession session,
-                                   @NonNull SocketOutput output) {
+                                   @NonNull SocketResponse output) {
         try {
             if(session.isOpen()) {
                 session.sendMessage(new TextMessage(objectMapper.writeValueAsString(output)));

@@ -17,12 +17,8 @@ import java.util.List;
 public class Entity {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     Long id;
-    
-    @Column(nullable = false, length = 63, unique = true)
-    String name;
     
     @Column(nullable = false, length = 63, unique = true)
     String des;

@@ -6,13 +6,12 @@ import lombok.NonNull;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 @Getter
 @Builder
-public class SocketOutput {
+public class SocketResponse {
     
     @NonNull
     @Builder.Default
@@ -21,7 +20,8 @@ public class SocketOutput {
     @Setter
     String request;
     
-    String message;
+    @Builder.Default
+    String message = "Success";
     
     @Builder.Default
     Map<String, Object> data = new HashMap<>();

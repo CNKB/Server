@@ -20,12 +20,8 @@ import java.util.List;
 public class Equipment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     Long id;
-
-    @Column(nullable = false, length = 63, unique = true)
-    String name;
 
     @Column(columnDefinition = "TINYINT UNSIGNED NOT NULL")
     Integer type;

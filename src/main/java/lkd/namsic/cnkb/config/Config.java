@@ -1,13 +1,20 @@
 package lkd.namsic.cnkb.config;
 
+import lkd.namsic.cnkb.domain.game.GameLog;
+import lkd.namsic.cnkb.domain.game.player.Player;
 import lkd.namsic.cnkb.dto.Response;
-import lkd.namsic.cnkb.exception.CommonException;
+import lkd.namsic.cnkb.enums.LogType;
+import lkd.namsic.cnkb.exception.StatusException;
+import lkd.namsic.cnkb.repository.GameLogRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -20,6 +27,13 @@ import java.util.concurrent.Callable;
 @Slf4j
 @Component
 public class Config {
+    
+    //TODO: Change unique fields in many-to-many tables
+    
+    private static Config instance;
+    public static Config getInstance() { return instance; }
+    
+    private final GameLogRepository gameLogRepository;
 
     @NonNull
     public final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd", Locale.KOREA);
@@ -28,8 +42,17 @@ public class Config {
     public final int MAX_PLAYER_COUNT = 5;
     public final String REGEX = "[^A-Za-z-_0-9ㄱ-ㅣ가-힣~!@#$%^&*=+/,. ]";
     public final List<String> INVALID_WORD_LIST;
+    
+    @PostConstruct
+    public void init() {
+        instance = this;
+    }
 
-    public Config() throws Exception {
+    public Config(
+        @Autowired GameLogRepository gameLogRepository
+    ) throws Exception {
+        this.gameLogRepository = gameLogRepository;
+        
         INVALID_WORD_LIST = new ArrayList<>();
 
         BufferedReader reader = new BufferedReader(new FileReader(System.getenv("invalid")));
@@ -47,12 +70,12 @@ public class Config {
         List<String> roleSet = (List<String>) request.getAttribute("roles");
 
         if(roleSet == null) {
-            throw new CommonException(403, "Forbidden resource");
+            throw new StatusException(403, "Forbidden resource");
         }
 
         for(String requiredRole : requiredRoles) {
             if(!roleSet.contains(requiredRole)) {
-                throw new CommonException(401, "Unauthorized");
+                throw new StatusException(401, "Unauthorized");
             }
         }
     }
@@ -61,7 +84,7 @@ public class Config {
     public <T extends Response> T safeCall(@NonNull String methodName, @NonNull Callable<T> callable) {
         try {
             return callable.call();
-        } catch(CommonException e) {
+        } catch(StatusException e) {
             return (T) T.builder()
                 .status(e.getStatus())
                 .message(e.getMessage())
@@ -121,6 +144,16 @@ public class Config {
     @NonNull
     public <T extends Response> ResponseEntity<T> getResponseEntity(@NonNull T response) {
         return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatus()));
+    }
+    
+    public void log(@NonNull LogType logType, @Nullable Player player, @NonNull String log) {
+        gameLogRepository.save(
+            GameLog.builder()
+                .player(player)
+                .logType(logType.value)
+                .log(log)
+                .build()
+        );
     }
 
 }

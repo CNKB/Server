@@ -9,7 +9,6 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@SuppressWarnings({"ClassCanBeRecord"})
 @Slf4j
 @Configuration
 public class WebConfig implements WebMvcConfigurer {

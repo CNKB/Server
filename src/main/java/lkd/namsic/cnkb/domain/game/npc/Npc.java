@@ -21,12 +21,8 @@ import java.util.List;
 public class Npc {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     Long id;
-    
-    @Column(nullable = false, length = 63, unique = true)
-    String name;
     
     @Builder.Default
     @Column(nullable = false)

@@ -11,7 +11,12 @@ import org.springframework.stereotype.Component;
 public class RoleInitializer extends Initializer {
 
     private final RoleRepository roleRepository;
-
+    
+    @Override
+    protected String getName() {
+        return "Role";
+    }
+    
     @Override
     protected void init() {
         createRole("user");
