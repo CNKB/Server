@@ -17,12 +17,6 @@ public class LivingStat {
     @Column
     Long id;
 
-    @Column(columnDefinition = "TINYINT UNSIGNED NOT NULL")
-    Integer statSaveType;
-
-    @Column(columnDefinition = "TINYINT UNSIGNED NOT NULL")
-    Integer statType;
-
     @Column(nullable = false)
     Integer stat;
 

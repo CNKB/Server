@@ -1,6 +1,7 @@
 package lkd.namsic.cnkb.domain.game.living;
 
 import lkd.namsic.cnkb.domain.game.entity.CreatedEntity;
+import lkd.namsic.cnkb.domain.game.item.Item;
 import lkd.namsic.cnkb.domain.game.player.Player;
 import lombok.*;
 
@@ -28,6 +29,10 @@ public class LivingItemUnique {
     @ManyToOne
     @JoinColumn(name = "created_entity_id")
     CreatedEntity createdEntity;
+    
+    @ManyToOne
+    @JoinColumn(name = "item_id", nullable = false)
+    Item item;
 
     @Builder.Default
     @OneToMany(mappedBy = "living", cascade = CascadeType.ALL)

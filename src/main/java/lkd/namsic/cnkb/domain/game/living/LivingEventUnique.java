@@ -20,6 +20,9 @@ public class LivingEventUnique {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     Long id;
+    
+    @Column(columnDefinition = "SMALLINT UNSIGNED NOT NULL")
+    Integer event;
 
     @ManyToOne
     @JoinColumn(name = "player_id")

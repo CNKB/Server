@@ -25,13 +25,15 @@ public class PlayerVariableHandler {
     @NonNull
     public String getVariable(@NonNull Player player, @NonNull VariableType variableType,
                               @NonNull String defaultValue) {
-        Optional<LivingVariableUnique> optionalUnique = livingVariableUniqueRepository.findByPlayer(player);
+        Optional<LivingVariableUnique> optionalUnique = livingVariableUniqueRepository.findByPlayerAndVariable(
+            player, variableType.value
+        );
 
         if(optionalUnique.isEmpty()) {
             return defaultValue;
         } else {
-            Optional<LivingVariable> optionalVariable = livingVariableRepository.findByLivingAndVariable(
-                optionalUnique.get(), variableType.value
+            Optional<LivingVariable> optionalVariable = livingVariableRepository.findByLiving(
+                optionalUnique.get()
             );
 
             if(optionalVariable.isEmpty()) {
@@ -59,17 +61,24 @@ public class PlayerVariableHandler {
     @Nullable
     public String setVariable(@NonNull Player player, @NonNull VariableType variableType, @NonNull String value) {
         LivingVariableUnique unique;
-        Optional<LivingVariableUnique> optionalUnique = livingVariableUniqueRepository.findByPlayer(player);
+        
+        int variable = variableType.value;
+        Optional<LivingVariableUnique> optionalUnique = livingVariableUniqueRepository.findByPlayerAndVariable(
+            player, variable
+        );
         
         if(optionalUnique.isEmpty()) {
             unique = livingVariableUniqueRepository.save(
-                LivingVariableUnique.builder().player(player).build()
+                LivingVariableUnique
+                    .builder()
+                    .player(player)
+                    .variable(variable)
+                    .build()
             );
             
             livingVariableRepository.save(
                 LivingVariable.builder()
                     .living(unique)
-                    .variable(variableType.value)
                     .data(value)
                     .build()
             );
@@ -77,14 +86,13 @@ public class PlayerVariableHandler {
             return null;
         } else {
             unique = optionalUnique.get();
-            Optional<LivingVariable> optionalLivingVariable = livingVariableRepository.findByLivingAndVariable(
-                unique, variableType.value
+            Optional<LivingVariable> optionalLivingVariable = livingVariableRepository.findByLiving(
+                unique
             );
             
             livingVariableRepository.save(
                 LivingVariable.builder()
                     .living(unique)
-                    .variable(variableType.value)
                     .data(value)
                     .build()
             );

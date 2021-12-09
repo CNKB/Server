@@ -17,9 +17,6 @@ public class LivingEvent {
     @Column
     Long id;
 
-    @Column(columnDefinition = "SMALLINT UNSIGNED NOT NULL")
-    Integer event;
-
     @ManyToOne
     @JoinColumn(name = "living_id", nullable = false, unique = true)
     LivingEventUnique living;

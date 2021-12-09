@@ -20,6 +20,9 @@ public class LivingVariableUnique {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     Long id;
+    
+    @Column(columnDefinition = "SMALLINT UNSIGNED NOT NULL")
+    Integer variable;
 
     @ManyToOne
     @JoinColumn(name = "player_id")

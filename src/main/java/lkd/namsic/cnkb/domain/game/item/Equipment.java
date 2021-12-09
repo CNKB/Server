@@ -1,6 +1,6 @@
 package lkd.namsic.cnkb.domain.game.item;
 
-import lkd.namsic.cnkb.domain.game.living.LivingEquip;
+import lkd.namsic.cnkb.domain.game.living.LivingEquipUnique;
 import lkd.namsic.cnkb.domain.game.npc.NpcShop;
 import lkd.namsic.cnkb.domain.game.npc.NpcShopSimple;
 import lkd.namsic.cnkb.domain.game.quest.QuestNeedEquip;
@@ -46,7 +46,7 @@ public class Equipment {
 
     @Builder.Default
     @OneToMany(mappedBy = "equipment", cascade = CascadeType.ALL)
-    List<LivingEquip> livingEquipList = new ArrayList<>();
+    List<LivingEquipUnique> livingEquipUniqueList = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "equipment", cascade = CascadeType.ALL)

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lkd.namsic.cnkb.controller.SocketController;
 import lkd.namsic.cnkb.dto.socket.SocketRequest;
 import lkd.namsic.cnkb.dto.socket.SocketResponse;
-import lkd.namsic.cnkb.exception.SessionCloseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
@@ -41,7 +40,7 @@ public class SocketHandler extends TextWebSocketHandler {
     }
 
     @Override
-    protected void handleTextMessage(WebSocketSession session, @NonNull TextMessage message) throws Exception {
+    protected void handleTextMessage(WebSocketSession session, @NonNull TextMessage message) {
         String payload = message.getPayload();
         SocketRequest request;
         
@@ -60,23 +59,7 @@ public class SocketHandler extends TextWebSocketHandler {
             return;
         }
         
-        SocketResponse output = null;
-
-        try {
-            output = socketController.executeService(request, session);
-        } catch(SessionCloseException e) {
-            session.close();
-            return;
-        } catch(Exception e) {
-            session.close();
-            e.printStackTrace();
-            
-            return;
-        }
-    
-        if(output != null) {
-            sendMessage(session, output);
-        }
+        socketController.executeService(request, session);
     }
     
     public static void sendMessage(@NonNull WebSocketSession session,

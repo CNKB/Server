@@ -7,6 +7,7 @@ import lkd.namsic.cnkb.enums.LogType;
 import lkd.namsic.cnkb.exception.StatusException;
 import lkd.namsic.cnkb.repository.GameLogRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.common.value.qual.IntRange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +23,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.concurrent.Callable;
 
 @Slf4j
 @Component
 public class Config {
-    
-    //TODO: Change unique fields in many-to-many tables
     
     private static Config instance;
     public static Config getInstance() { return instance; }
@@ -42,6 +42,8 @@ public class Config {
     public final int MAX_PLAYER_COUNT = 5;
     public final String REGEX = "[^A-Za-z-_0-9ㄱ-ㅣ가-힣~!@#$%^&*=+/,. ]";
     public final List<String> INVALID_WORD_LIST;
+    
+    private final Random random = new Random();
     
     @PostConstruct
     public void init() {
@@ -154,6 +156,36 @@ public class Config {
                 .log(log)
                 .build()
         );
+    }
+    
+    public void error(@NonNull String message, @NonNull Throwable t) {
+        gameLogRepository.save(
+            GameLog.builder()
+                .logType(LogType.ERROR.value)
+                .log(String.valueOf(t.getMessage()))
+                .build()
+        );
+        log.error(message, t);
+    }
+    
+    public void sleep(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public int getRandom(int min, @IntRange(from = 1) int range) {
+        return this.random.nextInt(range) + min;
+    }
+    
+    public long getRandom(int min, @IntRange(from = 1) long range) {
+        return this.random.nextLong(range) + min;
+    }
+    
+    public double getRandom() {
+        return this.random.nextDouble();
     }
 
 }

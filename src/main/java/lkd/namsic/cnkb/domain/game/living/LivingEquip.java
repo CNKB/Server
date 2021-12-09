@@ -66,10 +66,6 @@ public class LivingEquip {
     @JoinColumn(name = "living_id", nullable = false, unique = true)
     LivingEquipUnique living;
 
-    @ManyToOne
-    @JoinColumn(name = "equip_id", nullable = false)
-    Equipment equipment;
-
     @Builder.Default
     @OneToMany(mappedBy = "pk.livingEquip", cascade = CascadeType.ALL)
     List<GameMapFieldLivingEquip> gameMapFieldLivingEquipList = new ArrayList<>();

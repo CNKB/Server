@@ -9,15 +9,16 @@ import lkd.namsic.cnkb.enums.Doing;
 import lkd.namsic.cnkb.enums.LogType;
 import lkd.namsic.cnkb.exception.StatusException;
 import lkd.namsic.cnkb.exception.SessionCloseException;
+import lkd.namsic.cnkb.handler.SocketHandler;
 import lkd.namsic.cnkb.repository.PlayerRepository;
 import lkd.namsic.cnkb.service.socket.SocketService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.WebSocketSession;
 
-import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
@@ -52,8 +53,8 @@ public class SocketController {
         }
     }
     
-    @Nullable
-    public SocketResponse executeService (
+    @Transactional
+    public synchronized void executeService (
         @NonNull SocketRequest request,
         @NonNull WebSocketSession session
     ) throws SessionCloseException {
@@ -77,14 +78,11 @@ public class SocketController {
                 throw new StatusException(400, "Unknown request - " + requestName);
             }
             
-            SocketResponse output;
             Player player = playerRepository.findById(playerId).orElseThrow(
                 () -> new StatusException(401, "Unknown player")
             );
-            
-            if(player.getDoing() != Doing.NONE.value && service.invalidOnDoing()) {
-                output = null;
-            } else {
+    
+            if(!(player.getDoing() != Doing.NONE.value && service.invalidOnDoing())) {
                 Map<String, Object> inputData = request.getData();
                 String requiredArg;
                 Class<?> c;
@@ -108,31 +106,47 @@ public class SocketController {
                     }
                 }
                 
-                output = service.handleData(player, session, inputData);
-                output.setRequest(requestName);
-                
-                config.log(LogType.REQUEST, player, requestName + ": " + output.getMessage());
+                new Thread(() -> {
+                    try {
+                        try {
+                            SocketResponse response = service.handleData(player, session, inputData);
+                            response.setRequest(requestName);
+        
+                            config.log(LogType.REQUEST, player, requestName + ": " + response.getMessage());
+                            SocketHandler.sendMessage(session, response);
+                        } catch(SessionCloseException e) {
+                            session.close();
+                        } catch(Exception e) {
+                            session.close();
+                            config.error("Error occurred while handling data", e);
+                        }
+                    } catch(Exception e) {
+                        config.error("Error occurred while closing session", e);
+                    }
+                }).start();
             }
-            
-            return output;
-        } catch(SessionCloseException e) {
-            throw e;
         } catch(StatusException e) {
             log.info("Common Exception - {} {}", e.getMessage(), playerId);
             
-            return SocketResponse
-                .builder()
-                .status(e.getStatus())
-                .message(e.getMessage())
-                .build();
+            SocketHandler.sendMessage(
+                session,
+                SocketResponse
+                    .builder()
+                    .status(e.getStatus())
+                    .message(e.getMessage())
+                    .build()
+            );
         } catch(Exception e) {
-            e.printStackTrace();
+            config.error("Error occurred", e);
             
-            return SocketResponse
-                .builder()
-                .status(500)
-                .message(e.getMessage())
-                .build();
+            SocketHandler.sendMessage(
+                session,
+                SocketResponse
+                    .builder()
+                    .status(500)
+                    .message(e.getMessage())
+                    .build()
+            );
         }
     }
     

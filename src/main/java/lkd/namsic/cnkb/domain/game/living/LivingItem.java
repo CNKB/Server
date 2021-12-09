@@ -25,8 +25,4 @@ public class LivingItem {
     @JoinColumn(name = "living_id", nullable = false, unique = true)
     LivingItemUnique living;
 
-    @ManyToOne
-    @JoinColumn(name = "item_id", nullable = false)
-    Item item;
-
 }

@@ -12,6 +12,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Component
@@ -28,16 +29,18 @@ public class PlayerItemHandler {
     }
     
     public int getCount(@NonNull Player player, long itemId, int defaultCount) {
-        Optional<LivingItemUnique> optionalUnique = livingItemUniqueRepository.findByPlayer(player);
         Item item = itemRepository.findById(itemId).orElseThrow(
             () -> new ObjectNotFoundException(player, Item.class, itemId)
+        );
+        Optional<LivingItemUnique> optionalUnique = livingItemUniqueRepository.findByPlayerAndItem(
+            player, item
         );
 
         if(optionalUnique.isEmpty()) {
             return defaultCount;
         } else {
-            Optional<LivingItem> optionalVariable = livingItemRepository.findByLivingAndItem(
-                optionalUnique.get(), item
+            Optional<LivingItem> optionalVariable = livingItemRepository.findByLiving(
+                optionalUnique.get()
             );
 
             if(optionalVariable.isEmpty()) {
@@ -50,21 +53,25 @@ public class PlayerItemHandler {
     
     @Nullable
     public Integer setCount(@NonNull Player player, long itemId, int count) {
-        LivingItemUnique unique;
-        Optional<LivingItemUnique> optionalUnique = livingItemUniqueRepository.findByPlayer(player);
         Item item = itemRepository.findById(itemId).orElseThrow(
             () -> new ObjectNotFoundException(player, Item.class, itemId)
         );
-        
+        Optional<LivingItemUnique> optionalUnique = livingItemUniqueRepository.findByPlayerAndItem(
+            player, item
+        );
+    
+        LivingItemUnique unique;
         if(optionalUnique.isEmpty()) {
             unique = livingItemUniqueRepository.save(
-                LivingItemUnique.builder().player(player).build()
+                LivingItemUnique.builder()
+                    .player(player)
+                    .item(item)
+                    .build()
             );
             
             livingItemRepository.save(
                 LivingItem.builder()
                     .living(unique)
-                    .item(item)
                     .itemCount(count)
                     .build()
             );
@@ -72,14 +79,13 @@ public class PlayerItemHandler {
             return null;
         } else {
             unique = optionalUnique.get();
-            Optional<LivingItem> prevOptional = livingItemRepository.findByLivingAndItem(
-                unique, item
+            Optional<LivingItem> prevOptional = livingItemRepository.findByLiving(
+                unique
             );
             
             livingItemRepository.save(
                 LivingItem.builder()
                     .living(unique)
-                    .item(item)
                     .itemCount(count)
                     .build()
             );
@@ -92,52 +98,59 @@ public class PlayerItemHandler {
         }
     }
     
+    public int addCount(@NonNull Player player, long itemId, int count) {
+        return Objects.requireNonNull(this.addCount(player, itemId, count, 0));
+    }
+    
     @Nullable
-    public Integer addCount(@NonNull Player player, long itemId, int count) {
-        LivingItemUnique living;
-        Optional<LivingItemUnique> optionalUnique = livingItemUniqueRepository.findByPlayer(player);
+    public Integer addCount(@NonNull Player player, long itemId, int count, @Nullable Integer defaultValue) {
         Item item = itemRepository.findById(itemId).orElseThrow(
             () -> new ObjectNotFoundException(player, Item.class, itemId)
         );
+        Optional<LivingItemUnique> optionalUnique = livingItemUniqueRepository.findByPlayerAndItem(
+            player, item
+        );
     
+        LivingItemUnique living;
         if(optionalUnique.isEmpty()) {
             living = livingItemUniqueRepository.save(
-                LivingItemUnique.builder().player(player).build()
+                LivingItemUnique
+                    .builder()
+                    .player(player)
+                    .item(item)
+                    .build()
             );
             
             livingItemRepository.save(
                 LivingItem.builder()
                     .living(living)
-                    .item(item)
                     .itemCount(count)
                     .build()
             );
         
-            return null;
+            return defaultValue;
         } else {
             living = optionalUnique.get();
-            Optional<LivingItem> optionalLivingItem = livingItemRepository.findByLivingAndItem(
-                living, item
+            Optional<LivingItem> optionalLivingItem = livingItemRepository.findByLiving(
+                living
             );
         
             if(optionalLivingItem.isEmpty()) {
-                livingItemRepository.findByLivingAndItem(
-                    living, item
-                ).ifPresent(livingItem -> System.out.println(livingItem.getId()));
                 livingItemRepository.save(
                     LivingItem.builder()
                         .living(living)
-                        .item(item)
                         .itemCount(count)
                         .build()
                 );
                 
-                return null;
+                return defaultValue;
             } else {
                 LivingItem livingItem = optionalLivingItem.get();
                 int prevCount = livingItem.getItemCount();
                 
                 livingItem.setItemCount(prevCount + count);
+                livingItemRepository.save(livingItem);
+                
                 return prevCount;
             }
         }

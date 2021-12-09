@@ -6,6 +6,7 @@ public enum LogType implements ValuedEnum<Integer> {
     MISSING_ARG(1),
     WRONG_ARG_TYPE(2),
     OBJECT_NOT_FOUND(4),
+    ERROR(5),
     
     MINE(1000);
     

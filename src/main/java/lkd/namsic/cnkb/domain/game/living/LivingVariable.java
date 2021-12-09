@@ -17,9 +17,6 @@ public class LivingVariable {
     @Column
     Long id;
 
-    @Column(columnDefinition = "SMALLINT UNSIGNED NOT NULL")
-    Integer variable;
-
     @Column(columnDefinition = "JSON NOT NULL")
     String data;
 

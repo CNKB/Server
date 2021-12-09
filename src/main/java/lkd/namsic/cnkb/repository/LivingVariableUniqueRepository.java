@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface LivingVariableUniqueRepository extends JpaRepository<LivingVariableUnique, Long> {
 
-    Optional<LivingVariableUnique> findByPlayer(Player player);
+    Optional<LivingVariableUnique> findByPlayerAndVariable(Player player, Integer variable);
 
 }

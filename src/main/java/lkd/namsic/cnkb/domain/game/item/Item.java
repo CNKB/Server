@@ -1,6 +1,6 @@
 package lkd.namsic.cnkb.domain.game.item;
 
-import lkd.namsic.cnkb.domain.game.living.LivingItem;
+import lkd.namsic.cnkb.domain.game.living.LivingItemUnique;
 import lkd.namsic.cnkb.domain.game.map.GameMapFieldItem;
 import lkd.namsic.cnkb.domain.game.npc.NpcShop;
 import lkd.namsic.cnkb.domain.game.npc.NpcShopSimple;
@@ -49,7 +49,7 @@ public class Item {
 
     @Builder.Default
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
-    List<LivingItem> livingItemList = new ArrayList<>();
+    List<LivingItemUnique> livingItemUniqueList = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)

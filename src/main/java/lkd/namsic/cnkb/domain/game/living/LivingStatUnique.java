@@ -20,6 +20,12 @@ public class LivingStatUnique {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     Long id;
+    
+    @Column(columnDefinition = "TINYINT UNSIGNED NOT NULL")
+    Integer statSaveType;
+    
+    @Column(columnDefinition = "TINYINT UNSIGNED NOT NULL")
+    Integer statType;
 
     @ManyToOne
     @JoinColumn(name = "player_id")
