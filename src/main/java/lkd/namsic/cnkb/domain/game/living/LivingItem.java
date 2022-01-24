@@ -1,6 +1,5 @@
 package lkd.namsic.cnkb.domain.game.living;
 
-import lkd.namsic.cnkb.domain.game.item.Item;
 import lombok.*;
 
 import javax.persistence.*;

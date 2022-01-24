@@ -3,6 +3,7 @@ package lkd.namsic.cnkb.service.socket;
 import lkd.namsic.cnkb.config.Config;
 import lkd.namsic.cnkb.domain.game.player.Player;
 import lkd.namsic.cnkb.dto.socket.SocketResponse;
+import lkd.namsic.cnkb.enums.LogType;
 import lkd.namsic.cnkb.exception.SessionCloseException;
 import lkd.namsic.cnkb.handler.SocketHandler;
 import lombok.RequiredArgsConstructor;
@@ -51,6 +52,8 @@ public class SocketConnectService implements SocketService {
 
         SocketHandler.sessionMap.put(sessionId, playerId);
         data.put("version", config.VERSION);
+        
+        config.log(LogType.CONNECT, player, String.valueOf(playerId));
 
         return SocketResponse
             .builder()

@@ -8,7 +8,6 @@ import lkd.namsic.cnkb.exception.StatusException;
 import lkd.namsic.cnkb.repository.GameLogRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.common.value.qual.IntRange;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
@@ -50,9 +49,7 @@ public class Config {
         instance = this;
     }
 
-    public Config(
-        @Autowired GameLogRepository gameLogRepository
-    ) throws Exception {
+    public Config(GameLogRepository gameLogRepository) throws Exception {
         this.gameLogRepository = gameLogRepository;
         
         INVALID_WORD_LIST = new ArrayList<>();

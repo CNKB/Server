@@ -1,6 +1,5 @@
 package lkd.namsic.cnkb.domain.game.living;
 
-import lkd.namsic.cnkb.domain.game.item.Equipment;
 import lkd.namsic.cnkb.domain.game.map.GameMapFieldLivingEquip;
 import lombok.*;
 

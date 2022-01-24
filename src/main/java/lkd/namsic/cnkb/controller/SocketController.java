@@ -112,7 +112,6 @@ public class SocketController {
                             SocketResponse response = service.handleData(player, session, inputData);
                             response.setRequest(requestName);
         
-                            config.log(LogType.REQUEST, player, requestName + ": " + response.getMessage());
                             SocketHandler.sendMessage(session, response);
                         } catch(SessionCloseException e) {
                             session.close();
